@@ -103,9 +103,9 @@ public class DosSend {
      */
     public byte[] charToBits(char[] chars){
         byte[] bits = new byte[chars.length*8];
-        for(int i=0; i<chars.length; i++){
-            for(int j=0; j<8; j++){
-                bits[i*8+j] = (byte) (Integer.toBinaryString(chars[i]).charAt(7-j)-'0');
+        for (int i = 0; i < chars.length; i++) {
+            for (int j = 0; j < 8; j++) {
+                bits[i*8+j] = (byte) ((chars[i] >> (7-j)) & 0x01);
             }
         }
         return bits;
