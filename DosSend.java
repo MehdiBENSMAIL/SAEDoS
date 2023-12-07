@@ -184,6 +184,6 @@ public class DosSend {
         System.out.println();
 
         // exemple d'affichage du signal modulÃ© dans une fenÃªtre graphique
-        displaySig(dosSend.dataMod, 1000, 3000, "line", "Signal modulÃ©");
+        displaySig(dosSend.dataMod, 1000, 3000, "line", "Signal apres modulation");
     }
 }
