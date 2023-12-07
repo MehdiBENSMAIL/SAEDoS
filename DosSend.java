@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Scanner;
+import java.util.List;
 
 public class DosSend {
     final int FECH = 44100; // frÃ©quence d'Ã©chantillonnage
@@ -90,9 +91,9 @@ public class DosSend {
      * @return the number of characters read
      */
     public int readTextData(){
-        /*
-            Ã€ complÃ©ter
-        */
+        String text = input.nextLine();
+        dataChar = text.toCharArray();
+        return dataChar.length;
     }
 
     /**
@@ -101,13 +102,17 @@ public class DosSend {
      * @return byte array containing only 0 & 1
      */
     public byte[] charToBits(char[] chars){
-        /*
-             Ã€ complÃ©ter
-        */
+        byte[] bits = new byte[chars.length*8];
+        for(int i=0; i<chars.length; i++){
+            for(int j=0; j<8; j++){
+                bits[i*8+j] = (byte) (Integer.toBinaryString(chars[i]).charAt(7-j)-'0');
+            }
+        }
+        return bits;
     }
 
     /**
-     * Modulate the data to send and apply the symbol throughput via BAUDS and FECH.
+     * Modulate the data to send and apply the symbol throughout via BAUDS and FECH.
      * @param bits the data to modulate
      */
     public void modulateData(byte[] bits){
@@ -140,7 +145,6 @@ public class DosSend {
                 StdDraw.point(i, sig[i]);
             }
         }
-        
     }
 
     /**
