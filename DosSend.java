@@ -80,7 +80,7 @@ public class DosSend {
                 Ã€ complÃ©ter
             */
             }
-        } catch (Exception e) {
+        catch (Exception e) {
             System.out.println("Erreur d'Ã©criture");
         }
     }
