@@ -130,17 +130,12 @@ public class DosSend {
      * @param title the title of the window
      */
     public static void displaySig(double[] sig, int start, int stop, String mode, String title){
+        StdDraw.enableDoubleBuffering();
         StdDraw.setCanvasSize(1920, 720);
         StdDraw.setXscale(start, stop);
         StdDraw.setTitle(title);
         StdDraw.clear(StdDraw.BLACK);
-        StdDraw.setPenColor(StdDraw.BLUE);
-        StdDraw.setPenRadius(0.01);
-        StdDraw.line(start, 0, stop, 0);
         StdDraw.line(0, -1, 0, 1);
-        StdDraw.textLeft(stop, 0.1, "t");
-        StdDraw.textLeft(0.1, 1, "A");
-        StdDraw.textLeft(0.1, -1, "-A");
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.setPenRadius(0.005);       
         if(mode.equals("line")){
@@ -152,6 +147,17 @@ public class DosSend {
                 StdDraw.point(i, sig[i]);
             }
         }
+        StdDraw.setPenColor(StdDraw.RED);
+        StdDraw.setPenRadius(0.0075);
+        StdDraw.line(start, 0.5, stop, 0.5);
+        for(int i=start; i<stop; i+=100){
+            StdDraw.setPenColor(StdDraw.RED);
+            StdDraw.line(i, 0.475, i, 0.525);
+            StdDraw.filledRectangle(i, 0.450, 30, 0.02);
+            StdDraw.setPenColor(StdDraw.WHITE);
+            StdDraw.text(i, 0.450, ""+i);
+        }
+        StdDraw.show();
     }
 
     /**
