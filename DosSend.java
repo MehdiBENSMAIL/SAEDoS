@@ -125,9 +125,22 @@ public class DosSend {
      * @param title the title of the window
      */
     public static void displaySig(double[] sig, int start, int stop, String mode, String title){
-      /*
-          Ã€ complÃ©ter
-      */
+        StdDraw.setCanvasSize(1920, 720);
+        StdDraw.setXscale(start, stop);
+        StdDraw.setTitle(title);
+        StdDraw.clear(StdDraw.BLACK);
+        StdDraw.setPenColor(StdDraw.WHITE);
+        StdDraw.setPenRadius(0.005);
+        if(mode.equals("line")){
+            for(int i=start; i<stop-1; i++){
+                StdDraw.line(i, sig[i], i+1, sig[i+1]);
+            }
+        } else if(mode.equals("point")){
+            for(int i=start; i<stop; i++){
+                StdDraw.point(i, sig[i]);
+            }
+        }
+        
     }
 
     /**
