@@ -134,8 +134,15 @@ public class DosSend {
         StdDraw.setXscale(start, stop);
         StdDraw.setTitle(title);
         StdDraw.clear(StdDraw.BLACK);
+        StdDraw.setPenColor(StdDraw.BLUE);
+        StdDraw.setPenRadius(0.01);
+        StdDraw.line(start, 0, stop, 0);
+        StdDraw.line(0, -1, 0, 1);
+        StdDraw.textLeft(stop, 0.1, "t");
+        StdDraw.textLeft(0.1, 1, "A");
+        StdDraw.textLeft(0.1, -1, "-A");
         StdDraw.setPenColor(StdDraw.WHITE);
-        StdDraw.setPenRadius(0.005);
+        StdDraw.setPenRadius(0.005);       
         if(mode.equals("line")){
             for(int i=start; i<stop-1; i++){
                 StdDraw.line(i, sig[i], i+1, sig[i+1]);
