@@ -61,7 +61,12 @@ public class DosSend {
         long nbBytes = taille * CHANNELS * FMT / 8;
 
         try  {
+            // [Bloc de déclaration d'un fichier au format WAVE]
+            //  FileTypeBlocID
             outStream.write(new byte[]{'R', 'I', 'F', 'F'});
+            /*
+                Ã€ complÃ©ter
+            */
         } catch(Exception e){
             System.out.printf(e.toString());
         }
@@ -114,7 +119,9 @@ public class DosSend {
      * @param bits the data to modulate
      */
     public void modulateData(byte[] bits){
-
+        /*
+            Ã€ complÃ©ter
+        */
     }
 
     /**
