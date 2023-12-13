@@ -146,13 +146,13 @@ public class DosSend {
         dataMod = new double[(int)(bits.length*FECH/BAUDS)];
         int index = 0;
         for (int i = 0; i < START_SEQ.length; i++) {
-            for (int j = 0; j < FECH/BAUDS; j++) {
+            for (int j = 0; j < FECH/BAUDS && index < dataMod.length; j++) {
                 dataMod[index] = START_SEQ[i];
                 index++;
             }
         }
         for (int i = 0; i < bits.length; i++) {
-            for (int j = 0; j < FECH/BAUDS; j++) {
+            for (int j = 0; j < FECH/BAUDS && index < dataMod.length; j++) {
                 dataMod[index] = bits[i];
                 index++;
             }
@@ -207,9 +207,40 @@ public class DosSend {
      * @param title the title of the window
      */
     public static void displaySig(List<double[]> listOfSigs, int start, int stop, String mode, String title){
-      /*
-          Ã€ complÃ©ter
-      */
+        StdDraw.enableDoubleBuffering();
+        StdDraw.setCanvasSize(1920, 720);
+        StdDraw.setXscale(start, stop);
+        StdDraw.setTitle(title);
+        StdDraw.clear(StdDraw.BLACK);
+        StdDraw.line(0, -1, 0, 1);
+        StdDraw.setPenRadius(0.005);
+        for(int i=0; i<listOfSigs.size(); i++){
+            if(i==0){
+                StdDraw.setPenColor(StdDraw.WHITE);
+            } else {
+                StdDraw.setPenColor(StdDraw.RED);
+            }
+            if(mode.equals("line")){
+                for(int j=start; j<stop-1; j++){
+                    StdDraw.line(j, listOfSigs.get(i)[j], j+1, listOfSigs.get(i)[j+1]);
+                }
+            } else if(mode.equals("point")){
+                for(int j=start; j<stop; j++){
+                    StdDraw.point(j, listOfSigs.get(i)[j]);
+                }
+            }
+        }
+        StdDraw.setPenColor(StdDraw.RED);
+        StdDraw.setPenRadius(0.0075);
+        StdDraw.line(start, 0.5, stop, 0.5);
+        for(int i=start; i<stop; i+=100){
+            StdDraw.setPenColor(StdDraw.RED);
+            StdDraw.line(i, 0.475, i, 0.525);
+            StdDraw.filledRectangle(i, 0.450, 30, 0.02);
+            StdDraw.setPenColor(StdDraw.WHITE);
+            StdDraw.text(i, 0.450, ""+i);
+        }
+        StdDraw.show();
     }
 
 
