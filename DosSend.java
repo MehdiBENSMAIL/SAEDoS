@@ -143,7 +143,20 @@ public class DosSend {
      * @param bits the data to modulate
      */
     public void modulateData(byte[] bits){
-        
+        dataMod = new double[(int)(bits.length*FECH/BAUDS)];
+        int index = 0;
+        for (int i = 0; i < START_SEQ.length; i++) {
+            for (int j = 0; j < FECH/BAUDS; j++) {
+                dataMod[index] = START_SEQ[i];
+                index++;
+            }
+        }
+        for (int i = 0; i < bits.length; i++) {
+            for (int j = 0; j < FECH/BAUDS; j++) {
+                dataMod[index] = bits[i];
+                index++;
+            }
+        }
     }
 
     /**
