@@ -62,9 +62,6 @@ public class DosSend {
 
         try  {
             outStream.write(new byte[]{'R', 'I', 'F', 'F'});
-            /*
-                Ã€ complÃ©ter
-            */
         } catch(Exception e){
             System.out.printf(e.toString());
         }
@@ -77,10 +74,11 @@ public class DosSend {
      */
     public void writeNormalizeWavData(){
         try {
-            /*
-                Ã€ complÃ©ter
-            */
+            for (int i = 0; i < dataMod.length; i++) {
+                int sample = (int) (dataMod[i] * MAX_AMP);
+                writeLittleEndian(sample, FMT/8, outStream);
             }
+        }
         catch (Exception e) {
             System.out.println("Erreur d'Ã©criture");
         }
@@ -116,9 +114,7 @@ public class DosSend {
      * @param bits the data to modulate
      */
     public void modulateData(byte[] bits){
-        /*
-            Ã€ complÃ©ter
-        */
+
     }
 
     /**
