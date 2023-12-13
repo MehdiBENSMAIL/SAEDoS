@@ -61,10 +61,37 @@ public class DosSend {
         long nbBytes = taille * CHANNELS * FMT / 8;
 
         try  {
+            // [Bloc de déclaration d'un fichier au format WAVE]
+            //  FileTypeBlocID
             outStream.write(new byte[]{'R', 'I', 'F', 'F'});
-            /*
-                Ã€ complÃ©ter
-            */
+            //  FileSize
+            writeLittleEndian((int)(nbBytes+36), 4, outStream);
+            //  FileFormatID
+            outStream.write(new byte[]{'W', 'A', 'V', 'E'});
+
+            // [Bloc décrivant le format audio]
+            //  FormatBlocID
+            outStream.write(new byte[]{'f', 'm', 't', ' '});
+            //  BlocSize
+            writeLittleEndian(16, 4, outStream);
+            //  AudioFormat
+            writeLittleEndian(1, 2, outStream);
+            //  NbrCanaux
+            writeLittleEndian(CHANNELS, 2, outStream);
+            //  Frequence
+            writeLittleEndian(FECH, 4, outStream);
+            //  BytePerSec
+            writeLittleEndian(FECH*CHANNELS*FMT/8, 4, outStream);
+            //  BytePerBloc
+            writeLittleEndian(CHANNELS*FMT/8, 2, outStream);
+            //  BitsPerSample
+            writeLittleEndian(FMT, 2, outStream);
+            
+            // [Bloc de données]
+            //  DataBlocID
+            outStream.write(new byte[]{'d', 'a', 't', 'a'});
+            //  DataSize
+            writeLittleEndian((int)nbBytes, 4, outStream);
         } catch(Exception e){
             System.out.printf(e.toString());
         }
@@ -116,9 +143,7 @@ public class DosSend {
      * @param bits the data to modulate
      */
     public void modulateData(byte[] bits){
-        /*
-            Ã€ complÃ©ter
-        */
+        
     }
 
     /**
