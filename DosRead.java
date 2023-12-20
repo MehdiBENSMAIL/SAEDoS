@@ -95,22 +95,22 @@ public class DosRead {
      * @param n the number of samples to average
      */
     public void audioLPFilter(int n) {
-      int nbPoints = audio.length - (audio.length/n);
-      // On crée un nouveau tableau de la bonne taille
-      double[] audioFiltre = new double[audio.length - nbPoints];
-      // On applique le filtre
-      for (int i = 0; i < audioFiltre.length; i++) {
-        // On fait la moyenne des n points
-        double moyenne = 0;
+      double[] audioFiltered = new double[audio.length];
+      for (int i = 0; i < audio.length; i++) {
+        double sum = 0;
         for (int j = 0; j < n; j++) {
-          moyenne += audio[i+j];
+          if (i - j >= 0) {
+            sum += audio[i - j];
+          }
         }
-        moyenne /= n;
-        // On met la moyenne dans le nouveau tableau
-        audioFiltre[i] = moyenne;
+        audioFiltered[i] = sum / n;
       }
-      // On remplace l'ancien tableau par le nouveau
-      audio = audioFiltre;
+      audio = audioFiltered;
+
+      outputBits = new int[audio.length];
+      for (int i = 0; i < audio.length; i++) {
+        outputBits[i] = (int) audio[i];
+      }
     }
 
     /**
@@ -152,24 +152,26 @@ public class DosRead {
      * The next first symbol is the first bit of the first char.
      */
     public void decodeBitsToChar() {
-      // On cherche le début de la séquence de départ
+
       int start = 0;
-      while (!isStartSeq(start)) {
+      while (start < outputBits.length - 8) {
+        if (isStartSeq(start)) {
+          break;
+        }
         start++;
       }
-      // On récupère la taille du message
-      int nbBits = 0;
-      for (int i = start; i < start + 8; i++) {
-        nbBits = nbBits * 2 + outputBits[i];
+      if (start >= outputBits.length - 8) {
+        System.out.println("Pas de séquence de départ");
+        return;
       }
-      // On récupère le message
-      decodedChars = new char[nbBits];
-      for (int i = 0; i < nbBits; i++) {
-        int val = 0;
+      int nbChars = (outputBits.length - start) / 8;
+      decodedChars = new char[nbChars];
+      for (int i = 0; i < nbChars; i++) {
+        int charValue = 0;
         for (int j = 0; j < 8; j++) {
-          val = val * 2 + outputBits[start + 8 + i * 8 + j];
+          charValue += outputBits[start + j + i * 8] * Math.pow(2, 7 - j);
         }
-        decodedChars[i] = (char) val;
+        decodedChars[i] = (char) charValue;
       }
     }
 
