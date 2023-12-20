@@ -193,8 +193,6 @@ public class DosSend {
         for(int i = start; i < stop; i += (stop - start) / 10){
             StdDraw.setPenColor(StdDraw.RED);
             StdDraw.line(i, 0.475, i, 0.525);
-            // create a rectangle to display the value of the sample
-            StdDraw.filledRectangle(i, 0.475, 0.01, 0.025);
             StdDraw.setPenColor(StdDraw.YELLOW);
             StdDraw.text(i, 0.450, "" + i);
         }
@@ -239,7 +237,6 @@ public class DosSend {
         for(int i = start; i < stop; i += (stop - start) / 10){
             StdDraw.setPenColor(StdDraw.RED);
             StdDraw.line(i, 0.475, i, 0.525);
-            StdDraw.filledRectangle(i, 0.475, 0.01, 0.025);
             StdDraw.setPenColor(StdDraw.YELLOW);
             StdDraw.text(i, 0.450, "" + i);
         }
