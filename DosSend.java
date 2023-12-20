@@ -121,9 +121,7 @@ public class DosSend {
      */
     public int readTextData(){
         String text = input.nextLine();
-        System.out.println(text);
         dataChar = text.toCharArray();
-        System.out.println(dataChar);
         return dataChar.length;
     }
 
