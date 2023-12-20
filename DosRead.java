@@ -14,7 +14,7 @@ public class DosRead {
     char[] decodedChars;
 
     /**
-     * Constructor that opens the FIlEInputStream
+     * Constructor that opens the FileInputStream
      * and reads sampleRate, bitsPerSample and dataSize
      * from the header of the wav file
      * @param path the path of the wav file to read
@@ -135,14 +135,42 @@ public class DosRead {
     }
 
     /**
+     * Detect when the outputBits array starts with the START_SEQ
+     */
+    public boolean isStartSeq(int start) {
+      for (int i = 0; i < START_SEQ.length; i++) {
+        if (outputBits[start + i] != START_SEQ[i]) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    /**
      * Decode the outputBits array to a char array
      * The decoding is done by comparing the START_SEQ with the actual beginning of outputBits.
      * The next first symbol is the first bit of the first char.
      */
     public void decodeBitsToChar() {
-      /*
-       Complete mehdi stpppppppppppppppppppppp
-       */
+      // On cherche le début de la séquence de départ
+      int start = 0;
+      while (!isStartSeq(start)) {
+        start++;
+      }
+      // On récupère la taille du message
+      int nbBits = 0;
+      for (int i = start; i < start + 8; i++) {
+        nbBits = nbBits * 2 + outputBits[i];
+      }
+      // On récupère le message
+      decodedChars = new char[nbBits];
+      for (int i = 0; i < nbBits; i++) {
+        int val = 0;
+        for (int j = 0; j < 8; j++) {
+          val = val * 2 + outputBits[start + 8 + i * 8 + j];
+        }
+        decodedChars[i] = (char) val;
+      }
     }
 
     /**
