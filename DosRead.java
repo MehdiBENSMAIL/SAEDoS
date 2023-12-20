@@ -24,9 +24,12 @@ public class DosRead {
         try {
             fileInputStream= new FileInputStream(path);
             fileInputStream.read(header);
-            /*
-              À compléter
-            */
+            // Sample rate is at offset 24
+            sampleRate = byteArrayToInt(header, 24, 32);
+            // Bits per sample is at offset 34
+            bitsPerSample = byteArrayToInt(header, 34, 16);
+            // Datasize est à l'offset 40
+            dataSize = byteArrayToInt(header, 40, 32);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -64,9 +67,13 @@ public class DosRead {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /*
-          À compléter
-        */
+        // On récupère les données audio dans un tableau de doubles
+        audio = new double[dataSize/2];
+        // les données sont sur 16 bits donc 2 octets 
+        for (int i = 0; i < dataSize/2; i++) {
+          // On met tout ca en un entier signé sur 16 bits puis en double
+            audio[i] = (double) byteArrayToInt(audioData, 2*i, 16);
+        }
     }
 
     /**
