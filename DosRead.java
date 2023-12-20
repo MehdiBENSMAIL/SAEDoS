@@ -140,14 +140,9 @@ public class DosRead {
      * The next first symbol is the first bit of the first char.
      */
     public void decodeBitsToChar() {
-      // ON prend la taille du message
-      outputBits = new int[dataSize/BAUDS];
-      // On prend le nombre de bits du message
-      int nbBits = outputBits.length;
-      // On prend le nombre de caractères du message
-      int nbChars = nbBits/8;
-      // On crée un tableau de caractères
-      decodedChars = new char[nbChars];
+      /*
+       Complete mehdi stpppppppppppppppppppppp
+       */
     }
 
     /**
@@ -158,7 +153,6 @@ public class DosRead {
         for (int i = 0; i < data.length; i++) {
             System.out.print(data[i]);
         }
-        System.out.println("");
     }
 
 
@@ -235,7 +229,6 @@ public class DosRead {
             System.out.print("Message décodé : ");
             printIntArray(dosRead.decodedChars);
         }
-
         displaySig(dosRead.audio, 0, dosRead.audio.length-1, "line", "Signal audio");
 
         // Close the file input stream
