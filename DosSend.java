@@ -4,19 +4,19 @@ import java.util.Scanner;
 import java.util.List;
 
 public class DosSend {
-    final int FECH = 44100; // frÃ©quence d'Ã©chantillonnage
-    final int FP = 1000;    // frÃ©quence de la porteuses
-    final int BAUDS = 100;  // dÃ©bit en symboles par seconde
-    final int FMT = 16 ;    // format des donnÃ©es
+    final int FECH = 44100; // frequence d'echantillonnage
+    final int FP = 1000;    // frequence de la porteuses
+    final int BAUDS = 100;  // debit en symboles par seconde
+    final int FMT = 16 ;    // format des donnees
     final int MAX_AMP = (1<<(FMT-1))-1; // amplitude max en entier
     final int CHANNELS = 1; // nombre de voies audio (1 = mono)
-    final int[] START_SEQ = {1,0,1,0,1,0,1,0}; // sÃ©quence de synchro au dÃ©but
+    final int[] START_SEQ = {1,0,1,0,1,0,1,0}; // sequence de synchro au dÃ©but
     final Scanner input = new Scanner(System.in); // pour lire le fichier texte
 
-    long taille;                // nombre d'octets de donnÃ©es Ã  transmettre
-    double duree ;              // durÃ©e de l'audio
-    double[] dataMod;           // donnÃ©es modulÃ©es
-    char[] dataChar;            // donnÃ©es en char
+    long taille;                // nombre d'octets de donnees Ã  transmettre
+    double duree ;              // duree de l'audio
+    double[] dataMod;           // donnees modulees
+    char[] dataChar;            // donnees en char
     FileOutputStream outStream; // flux de sortie pour le fichier .wav
 
 
@@ -103,11 +103,13 @@ public class DosSend {
      */
     public void writeNormalizeWavData(){
         try {
+            // Ecriture des données
             for (int i = 0; i < dataMod.length; i++) {
                 int sample = (int) (dataMod[i] * MAX_AMP);
                 writeLittleEndian(sample, FMT/8, outStream);
             }
         }
+        // Gestion de l'erreur
         catch (Exception e) {
             System.out.println("Erreur d'ecriture");
         }
@@ -245,27 +247,27 @@ public class DosSend {
 
 
     public static void main(String[] args) {
-        // crÃ©Ã© un objet DosSend
+        // cree un objet DosSend
         DosSend dosSend = new DosSend("DosOok_message.wav");
-        // lit le texte Ã  envoyer depuis l'entrÃ©e standard
-        // et calcule la durÃ©e de l'audio correspondant
+        // lit le texte a  envoyer depuis l'entree standard
+        // et calcule la duree de l'audio correspondant
         dosSend.duree = (double)(dosSend.readTextData()+dosSend.START_SEQ.length/8)*8.0/dosSend.BAUDS;
 
-        // gÃ©nÃ¨re le signal modulÃ© aprÃ¨s avoir converti les donnÃ©es en bits
+        // genere le signal module apres avoir converti les données en bits
         dosSend.modulateData(dosSend.charToBits(dosSend.dataChar));
-        // Ã©crit l'entÃªte du fichier wav
+        // Ecrit l'entete du fichier wav
         dosSend.writeWavHeader();
-        // Ã©crit les donnÃ©es audio dans le fichier wav
+        // Ecrit les donnees audio dans le fichier wav
         dosSend.writeNormalizeWavData();
 
-        // affiche les caractÃ©ristiques du signal dans la console
+        // affiche les caracteristiques du signal dans la console
         System.out.println("Message : "+String.valueOf(dosSend.dataChar));
         System.out.println("\tNombre de symboles : "+dosSend.dataChar.length);
         System.out.println("\tNombre d'Ã©chantillons : "+dosSend.dataMod.length);
-        System.out.println("\tDurÃ©e : "+dosSend.duree+" s");
+        System.out.println("\tDuree : "+dosSend.duree+" s");
         System.out.println();
 
-        // exemple d'affichage du signal modulÃ© dans une fenÃªtre graphique
+        // exemple d'affichage du signal module dans une fenetre graphique
         displaySig(dosSend.dataMod, 1000, 3000, "line", "Signal apres modulation");
     }
 }
