@@ -190,11 +190,12 @@ public class DosSend {
         StdDraw.setPenColor(StdDraw.RED);
         StdDraw.setPenRadius(0.0075);
         StdDraw.line(start, 0.5, stop, 0.5);
-        for(int i=start; i<stop; i+=100){
+        for(int i=start; i<stop; i+=(stop - start)/10){
             StdDraw.setPenColor(StdDraw.RED);
             StdDraw.line(i, 0.475, i, 0.525);
-            StdDraw.filledRectangle(i, 0.450, 30, 0.02);
-            StdDraw.setPenColor(StdDraw.WHITE);
+            // create a rectangle to display the value of the sample
+            StdDraw.filledRectangle(i, 0.475, 0.01, 0.025);
+            StdDraw.setPenColor(StdDraw.YELLOW);
             StdDraw.text(i, 0.450, ""+i);
         }
         StdDraw.show();
@@ -235,11 +236,11 @@ public class DosSend {
         StdDraw.setPenColor(StdDraw.RED);
         StdDraw.setPenRadius(0.0075);
         StdDraw.line(start, 0.5, stop, 0.5);
-        for(int i=start; i<stop; i+=100){
+        for(int i=start; i < stop; i+=(stop - start)/10){
             StdDraw.setPenColor(StdDraw.RED);
             StdDraw.line(i, 0.475, i, 0.525);
-            StdDraw.filledRectangle(i, 0.450, 30, 0.02);
-            StdDraw.setPenColor(StdDraw.WHITE);
+            StdDraw.filledRectangle(i, 0.475, 0.01, 0.025);
+            StdDraw.setPenColor(StdDraw.YELLOW);
             StdDraw.text(i, 0.450, ""+i);
         }
         StdDraw.show();
@@ -268,6 +269,6 @@ public class DosSend {
         System.out.println();
 
         // exemple d'affichage du signal module dans une fenetre graphique
-        displaySig(dosSend.dataMod, 1000, 3000, "line", "Signal apres modulation");
+        displaySig(dosSend.dataMod, 0, 155232, "line", "Signal apres modulation");
     }
 }
