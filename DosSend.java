@@ -264,11 +264,15 @@ public class DosSend {
         // affiche les caracteristiques du signal dans la console
         System.out.println("Message : " + String.valueOf(dosSend.dataChar));
         System.out.println("\tNombre de symboles : " + dosSend.dataChar.length);
-        System.out.println("\tNombre d'Ã©chantillons : " + dosSend.dataMod.length);
+        System.out.println("\tNombre d'echantillons : " + dosSend.dataMod.length);
         System.out.println("\tDuree : " + dosSend.duree + " s");
         System.out.println();
 
         // exemple d'affichage du signal module dans une fenetre graphique
+<<<<<<< Updated upstream
         displaySig(dosSend.dataMod, 0, dosSend.dataMod.length, "line", "Signal apres modulation");
+=======
+        displaySig(dosSend.dataMod, 0, 100000, "line", "Signal apres modulation");
+>>>>>>> Stashed changes
     }
 }
