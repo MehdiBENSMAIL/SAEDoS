@@ -81,9 +81,11 @@ public class DosRead {
      * Reverse the negative values of the audio array
      */
     public void audioRectifier(){
-      /*
-        À compléter
-      */
+      for (int i = 0; i < audio.length; i++) {
+        if (audio[i] < 0) {
+          audio[i] = Math.abs(audio[i]);
+        }
+      }
     }
 
     /**
@@ -153,9 +155,35 @@ public class DosRead {
      * @param title the title of the window
      */
     public static void displaySig(double[] sig, int start, int stop, String mode, String title){
-      /*
-        À compléter. Méthode a priori identique à sa version dans DosSend.
-      */
+      StdDraw.enableDoubleBuffering();
+        StdDraw.setCanvasSize(1920, 720);
+        StdDraw.setXscale(start, stop);
+        StdDraw.setTitle(title);
+        StdDraw.clear(StdDraw.BLACK);
+        StdDraw.line(0, -1, 0, 1);
+        StdDraw.setPenColor(StdDraw.WHITE);
+        StdDraw.setPenRadius(0.005);       
+        if(mode.equals("line")){
+            for(int i = start; i < stop - 1; i++){
+                StdDraw.line(i, sig[i], i + 1, sig[i + 1]);
+            }
+        } else if(mode.equals("point")){
+            for(int i = start; i < stop; i++){
+                StdDraw.point(i, sig[i]);
+            }
+        }
+        StdDraw.setPenColor(StdDraw.RED);
+        StdDraw.setPenRadius(0.0075);
+        StdDraw.line(start, 0.5, stop, 0.5);
+        for(int i = start; i < stop; i += (stop - start) / 10){
+            StdDraw.setPenColor(StdDraw.RED);
+            StdDraw.line(i, 0.475, i, 0.525);
+            // create a rectangle to display the value of the sample
+            StdDraw.filledRectangle(i, 0.475, 0.01, 0.025);
+            StdDraw.setPenColor(StdDraw.YELLOW);
+            StdDraw.text(i, 0.450, "" + i);
+        }
+        StdDraw.show();
     }
 
     /**
