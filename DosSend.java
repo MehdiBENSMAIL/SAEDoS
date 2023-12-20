@@ -29,7 +29,7 @@ public class DosSend {
         try{
             outStream = new FileOutputStream(file);
         } catch (Exception e) {
-            System.out.println("Erreur de crÃ©ation du fichier");
+            System.out.println("Erreur de creation du fichier");
         }
     }
 
@@ -121,8 +121,15 @@ public class DosSend {
      */
     public int readTextData(){
         String text = input.nextLine();
+        System.out.println(text);
         dataChar = text.toCharArray();
+        System.out.println(dataChar);
         return dataChar.length;
+    }
+
+    public void test() {
+        String text = input.nextLine();
+        System.out.println(text);
     }
 
     /**
