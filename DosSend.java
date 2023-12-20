@@ -131,10 +131,10 @@ public class DosSend {
      * @return byte array containing only 0 & 1
      */
     public byte[] charToBits(char[] chars){
-        byte[] bits = new byte[chars.length*8];
+        byte[] bits = new byte[chars.length * 8];
         for (int i = 0; i < chars.length; i++) {
             for (int j = 0; j < 8; j++) {
-                bits[i*8+j] = (byte) ((chars[i] >> (7-j)) & 0x01);
+                bits[i * 8 + j] = (byte) ((chars[i] >> (7 - j)) & 0x01);
             }
         }
         return bits;
@@ -145,7 +145,7 @@ public class DosSend {
      * @param bits the data to modulate
      */
     public void modulateData(byte[] bits){
-        dataMod = new double[(int)(bits.length*FECH/BAUDS)];
+        dataMod = new double[(int)(bits.length * FECH / BAUDS)];
         int index = 0;
         for (int i = 0; i < START_SEQ.length; i++) {
             for (int j = 0; j < FECH/BAUDS && index < dataMod.length; j++) {
@@ -179,24 +179,24 @@ public class DosSend {
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.setPenRadius(0.005);       
         if(mode.equals("line")){
-            for(int i=start; i<stop-1; i++){
-                StdDraw.line(i, sig[i], i+1, sig[i+1]);
+            for(int i = start; i < stop - 1; i++){
+                StdDraw.line(i, sig[i], i + 1, sig[i + 1]);
             }
         } else if(mode.equals("point")){
-            for(int i=start; i<stop; i++){
+            for(int i = start; i < stop; i++){
                 StdDraw.point(i, sig[i]);
             }
         }
         StdDraw.setPenColor(StdDraw.RED);
         StdDraw.setPenRadius(0.0075);
         StdDraw.line(start, 0.5, stop, 0.5);
-        for(int i=start; i<stop; i+=(stop - start)/10){
+        for(int i = start; i < stop; i += (stop - start) / 10){
             StdDraw.setPenColor(StdDraw.RED);
             StdDraw.line(i, 0.475, i, 0.525);
             // create a rectangle to display the value of the sample
             StdDraw.filledRectangle(i, 0.475, 0.01, 0.025);
             StdDraw.setPenColor(StdDraw.YELLOW);
-            StdDraw.text(i, 0.450, ""+i);
+            StdDraw.text(i, 0.450, "" + i);
         }
         StdDraw.show();
     }
@@ -217,18 +217,18 @@ public class DosSend {
         StdDraw.clear(StdDraw.BLACK);
         StdDraw.line(0, -1, 0, 1);
         StdDraw.setPenRadius(0.005);
-        for(int i=0; i<listOfSigs.size(); i++){
-            if(i==0){
+        for(int i = 0; i < listOfSigs.size(); i++){
+            if(i == 0){
                 StdDraw.setPenColor(StdDraw.WHITE);
             } else {
                 StdDraw.setPenColor(StdDraw.RED);
             }
             if(mode.equals("line")){
-                for(int j=start; j<stop-1; j++){
-                    StdDraw.line(j, listOfSigs.get(i)[j], j+1, listOfSigs.get(i)[j+1]);
+                for(int j = start; j < stop - 1; j++){
+                    StdDraw.line(j, listOfSigs.get(i)[j], j + 1, listOfSigs.get(i)[j + 1]);
                 }
             } else if(mode.equals("point")){
-                for(int j=start; j<stop; j++){
+                for(int j = start; j < stop; j++){
                     StdDraw.point(j, listOfSigs.get(i)[j]);
                 }
             }
@@ -236,12 +236,12 @@ public class DosSend {
         StdDraw.setPenColor(StdDraw.RED);
         StdDraw.setPenRadius(0.0075);
         StdDraw.line(start, 0.5, stop, 0.5);
-        for(int i=start; i < stop; i+=(stop - start)/10){
+        for(int i = start; i < stop; i += (stop - start) / 10){
             StdDraw.setPenColor(StdDraw.RED);
             StdDraw.line(i, 0.475, i, 0.525);
             StdDraw.filledRectangle(i, 0.475, 0.01, 0.025);
             StdDraw.setPenColor(StdDraw.YELLOW);
-            StdDraw.text(i, 0.450, ""+i);
+            StdDraw.text(i, 0.450, "" + i);
         }
         StdDraw.show();
     }
@@ -252,7 +252,7 @@ public class DosSend {
         DosSend dosSend = new DosSend("DosOok_message.wav");
         // lit le texte a  envoyer depuis l'entree standard
         // et calcule la duree de l'audio correspondant
-        dosSend.duree = (double)(dosSend.readTextData()+dosSend.START_SEQ.length/8)*8.0/dosSend.BAUDS;
+        dosSend.duree = (double)(dosSend.readTextData() + dosSend.START_SEQ.length / 8) * 8.0 / dosSend.BAUDS;
 
         // genere le signal module apres avoir converti les données en bits
         dosSend.modulateData(dosSend.charToBits(dosSend.dataChar));
@@ -262,10 +262,10 @@ public class DosSend {
         dosSend.writeNormalizeWavData();
 
         // affiche les caracteristiques du signal dans la console
-        System.out.println("Message : "+String.valueOf(dosSend.dataChar));
-        System.out.println("\tNombre de symboles : "+dosSend.dataChar.length);
-        System.out.println("\tNombre d'Ã©chantillons : "+dosSend.dataMod.length);
-        System.out.println("\tDuree : "+dosSend.duree+" s");
+        System.out.println("Message : " + String.valueOf(dosSend.dataChar));
+        System.out.println("\tNombre de symboles : " + dosSend.dataChar.length);
+        System.out.println("\tNombre d'Ã©chantillons : " + dosSend.dataMod.length);
+        System.out.println("\tDuree : " + dosSend.duree + " s");
         System.out.println();
 
         // exemple d'affichage du signal module dans une fenetre graphique
