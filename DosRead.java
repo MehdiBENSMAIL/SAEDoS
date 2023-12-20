@@ -23,12 +23,13 @@ public class DosRead {
         byte[] header = new byte[44]; // The header is 44 bytes long
         try {
             fileInputStream= new FileInputStream(path);
+            // On vient récupérer les différents paramètres dans le header
             fileInputStream.read(header);
-            // Sample rate is at offset 24
+            // Le taux d'echantillonage est a l'offset 24
             sampleRate = byteArrayToInt(header, 24, 32);
-            // Bits per sample is at offset 34
+            // Pour les bits par echantillon, c'est a l'offset 34
             bitsPerSample = byteArrayToInt(header, 34, 16);
-            // Datasize est à l'offset 40
+            // pour la taille des donnees, c'est a l'offset 40
             dataSize = byteArrayToInt(header, 40, 32);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -91,9 +92,22 @@ public class DosRead {
      * @param n the number of samples to average
      */
     public void audioLPFilter(int n) {
-      /*
-        À compléter
-      */
+      int nbPoints = audio.length - (audio.length/n);
+      // On crée un nouveau tableau de la bonne taille
+      double[] audioFiltre = new double[audio.length - nbPoints];
+      // On applique le filtre
+      for (int i = 0; i < audioFiltre.length; i++) {
+        // On fait la moyenne des n points
+        double moyenne = 0;
+        for (int j = 0; j < n; j++) {
+          moyenne += audio[i+j];
+        }
+        moyenne /= n;
+        // On met la moyenne dans le nouveau tableau
+        audioFiltre[i] = moyenne;
+      }
+      // On remplace l'ancien tableau par le nouveau
+      audio = audioFiltre;
     }
 
     /**
@@ -123,9 +137,10 @@ public class DosRead {
      * @param data the array to print
      */
     public static void printIntArray(char[] data) {
-      /*
-        À compléter
-      */
+        for (int i = 0; i < data.length; i++) {
+            System.out.print(data[i]);
+        }
+        System.out.println("");
     }
 
 
