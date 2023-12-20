@@ -31,6 +31,7 @@ public class DosRead {
             bitsPerSample = byteArrayToInt(header, 34, 16);
             // pour la taille des donnees, c'est a l'offset 40
             dataSize = byteArrayToInt(header, 40, 32);
+            System.out.println(dataSize);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -128,10 +129,15 @@ public class DosRead {
      * The decoding is done by comparing the START_SEQ with the actual beginning of outputBits.
      * The next first symbol is the first bit of the first char.
      */
-    public void decodeBitsToChar(){
-      /*
-        À compléter
-      */
+    public void decodeBitsToChar() {
+      // ON prend la taille du message
+      outputBits = new int[dataSize/BAUDS];
+      // On prend le nombre de bits du message
+      int nbBits = outputBits.length;
+      // On prend le nombre de caractères du message
+      int nbChars = nbBits/8;
+      // On crée un tableau de caractères
+      decodedChars = new char[nbChars];
     }
 
     /**
