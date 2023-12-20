@@ -119,9 +119,19 @@ public class DosRead {
      * @param threshold the threshold that separates 0 and 1
      */
     public void audioResampleAndThreshold(int period, int threshold){
-      /*
-        À compléter
-      */
+      int nbBits = audio.length / period;
+      double[] audioResample = new double[nbBits];
+      for (int i = 0; i < audioResample.length; i++) {
+        audioResample[i] = audio[i * period];
+      }
+      audio = audioResample;
+      for (int i = 0; i < audio.length; i++) {
+        if (audio[i] > threshold) {
+          audio[i] = 1;
+        } else {
+          audio[i] = 0;
+        }
+      }
     }
 
     /**
