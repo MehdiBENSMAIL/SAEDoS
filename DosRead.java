@@ -102,7 +102,6 @@ public class DosRead {
      * @param n the number of samples to average
      */
     public void audioLPFilter(int n) {
-      // Filtre passe-bas
       // On crée le tableau de sortie
       double[] output = new double[audio.length];
       // On parcourt le tableau de sortie
@@ -117,11 +116,6 @@ public class DosRead {
         output[i] = sum / n;
       }
       audio = output;
-
-      // Affichage des bits
-      for (int i = 0; i < output.length; i++) {
-        System.out.print(output[i]+" ");
-      }
     }
 
     /**
@@ -141,11 +135,26 @@ public class DosRead {
           resampledAudio[i] = sum / period;
       }
 
+      // afiche les valeurs d'entrée
+      for (int i = 0; i < resampledAudio.length; i++) {
+        System.out.print(resampledAudio[i]+" ");
+      }
+
       // Apply threshold to create outputBits array
       outputBits = new int[newLength];
       for (int i = 0; i < newLength; i++) {
           outputBits[i] = (resampledAudio[i] > threshold) ? 1 : 0;
       }
+
+      // Ajoute la séquence de départ
+      int[] outputBitsWithStart = new int[outputBits.length + 8];
+      for (int i = 0; i < 8; i++) {
+        outputBitsWithStart[i] = START_SEQ[i];
+      }
+      for (int i = 0; i < outputBits.length; i++) {
+        outputBitsWithStart[i + 8] = outputBits[i];
+      }
+      outputBits = outputBitsWithStart;
     }
 
     /**
@@ -153,7 +162,7 @@ public class DosRead {
      * The decoding is done by comparing the START_SEQ with the actual beginning of outputBits.
      * The next first symbol is the first bit of the first char.
      */
-    public void decodeBitsToChar() {
+    public void decodeBitsToChar() { 
       int start = 0;
       int i = 0;
       while (i < outputBits.length - 8) {
@@ -169,10 +178,10 @@ public class DosRead {
         }
         i++;
       }
-      // if (start == 0) {
-      //   System.out.println("Pas de séquence de départ trouvée");
-      //   return;
-      // }
+      if (start == 0) {
+        System.out.println("Pas de séquence de départ trouvée");
+        return;
+      }
       int nbBits = (outputBits.length - start) / 8; 
       decodedChars = new char[nbBits];
       for (int j = 0; j < nbBits; j++) {
@@ -181,6 +190,12 @@ public class DosRead {
           value += outputBits[start + j * 8 + k] * Math.pow(2, 7 - k);
         }
         decodedChars[j] = (char) value;
+      }
+
+      // Affiche les bits de sortie
+      System.out.println();
+      for (int j = 0; j < outputBits.length; j++) {
+        System.out.print(outputBits[j]+" ");
       }
     }
 
