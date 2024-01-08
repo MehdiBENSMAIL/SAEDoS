@@ -102,16 +102,11 @@ public class DosSend {
      * after normalizing its amplitude to the maximum value of the format (8 bits signed)
      */
     public void writeNormalizeWavData(){
-        try {
-            // Ecriture des données
-            for (int i = 0; i < dataMod.length; i++) {
-                int sample = (int) (dataMod[i] * MAX_AMP);
-                writeLittleEndian(sample, FMT/8, outStream);
-            }
+        for (int i = 0; i < dataMod.length; i++) {
+            dataMod[i] = dataMod[i] * MAX_AMP;
         }
-        // Gestion de l'erreur
-        catch (Exception e) {
-            System.out.println("Erreur d'ecriture");
+        for (int i = 0; i < dataMod.length; i++) {
+            writeLittleEndian((int)dataMod[i], FMT/8, outStream);
         }
     }
 
@@ -125,11 +120,6 @@ public class DosSend {
         return dataChar.length;
     }
 
-    public void test() {
-        String text = input.nextLine();
-        System.out.println(text);
-    }
-
     /**
      * convert a char array to a bit array
      * @param chars
@@ -139,7 +129,7 @@ public class DosSend {
         byte[] bits = new byte[chars.length * 8];
         for (int i = 0; i < chars.length; i++) {
             for (int j = 0; j < 8; j++) {
-                bits[i * 8 + j] = (byte) ((chars[i] >> (7 - j)) & 0x01);
+                bits[i * 8 + j] = (byte) ((chars[i] >> (7 - j)) & 1);
             }
         }
         return bits;
@@ -152,18 +142,21 @@ public class DosSend {
     public void modulateData(byte[] bits){
         dataMod = new double[(int)(bits.length * FECH / BAUDS)];
         int index = 0;
-        for (int i = 0; i < START_SEQ.length; i++) {
-            for (int j = 0; j < FECH/BAUDS && index < dataMod.length; j++) {
-                dataMod[index] = START_SEQ[i];
-                index++;
-            }
-        }
         for (int i = 0; i < bits.length; i++) {
             for (int j = 0; j < FECH/BAUDS && index < dataMod.length; j++) {
                 dataMod[index] = bits[i];
                 index++;
             }
         }
+
+        double[] dataModWithStart = new double[dataMod.length + START_SEQ.length];
+        for (int i = 0; i < START_SEQ.length; i++) {
+            dataModWithStart[i] = START_SEQ[i];
+        }
+        for (int i = 0; i < dataMod.length; i++) {
+            dataModWithStart[i + START_SEQ.length] = dataMod[i];
+        }
+        dataMod = dataModWithStart;
     }
 
     /**

@@ -69,13 +69,29 @@ public class DosRead {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // On récupère les données audio dans un tableau de doubles
-        audio = new double[dataSize/2];
-        // les données sont sur 16 bits donc 2 octets 
-        for (int i = 0; i < dataSize/2; i++) {
-          // On met tout ca en un entier signé sur 16 bits puis en double
-            audio[i] = (double) byteArrayToInt(audioData, 2*i, 16);
+        // On crée le tableau de sortie
+        audio = new double[audioData.length / 2];
+        // On parcourt le tableau de sortie
+        for (int i = 0; i < audio.length; i++) {
+            // On récupère les deux octets correspondant à l'échantillon
+            byte b1 = audioData[i * 2];
+            byte b2 = audioData[i * 2 + 1];
+            // On les convertit en entier
+            int value = (b2 << 8) | (b1 & 0xFF);
+            // On convertit l'entier en double
+            audio[i] = (double) value;
         }
+
+        // On normalise les valeurs entre -1 et 1
+        // double max = 0;
+        // for (int i = 0; i < audio.length; i++) {
+        //     if (Math.abs(audio[i]) > max) {
+        //         max = Math.abs(audio[i]);
+        //     }
+        // }
+        // for (int i = 0; i < audio.length; i++) {
+        //     audio[i] /= max;
+        // }
     }
 
     /**
@@ -97,19 +113,25 @@ public class DosRead {
     public void audioLPFilter(int n) {
       double[] audioFiltered = new double[audio.length];
       for (int i = 0; i < audio.length; i++) {
-        double sum = 0;
-        for (int j = 0; j < n; j++) {
-          if (i - j >= 0) {
-            sum += audio[i - j];
+          double sum = 0;
+          int count = 0;
+
+          // Calculer la moyenne mobile sur les échantillons voisins
+          for (int j = Math.max(0, i - n + 1); j <= Math.min(audio.length - 1, i); j++) {
+              sum += audio[j];
+              count++;
           }
-        }
-        audioFiltered[i] = sum / n;
+
+          // Appliquer la moyenne mobile
+          audioFiltered[i] = sum / count;
       }
+
       audio = audioFiltered;
 
+      // Convertir les valeurs filtrées en bits
       outputBits = new int[audio.length];
       for (int i = 0; i < audio.length; i++) {
-        outputBits[i] = (int) audio[i];
+          outputBits[i] = (int) audio[i];
       }
     }
 
@@ -119,31 +141,26 @@ public class DosRead {
      * @param threshold the threshold that separates 0 and 1
      */
     public void audioResampleAndThreshold(int period, int threshold){
-      int nbBits = audio.length / period;
-      double[] audioResample = new double[nbBits];
-      for (int i = 0; i < audioResample.length; i++) {
-        audioResample[i] = audio[i * period];
-      }
-      audio = audioResample;
-      for (int i = 0; i < audio.length; i++) {
-        if (audio[i] > threshold) {
-          audio[i] = 1;
+      // On récupère la taille du tableau de sortie
+      int nbBits = outputBits.length / period;
+      // On crée le tableau de sortie
+      int[] outputBitsResampled = new int[nbBits];
+      // On parcourt le tableau de sortie
+      for (int i = 0; i < nbBits; i++) {
+        // On calcule la moyenne des bits sur la période
+        int sum = 0;
+        for (int j = 0; j < period; j++) {
+          sum += outputBits[i * period + j];
+        }
+        int average = sum / period;
+        // On applique le seuil
+        if (average > threshold) {
+          outputBitsResampled[i] = 1;
         } else {
-          audio[i] = 0;
+          outputBitsResampled[i] = 0;
         }
       }
-    }
-
-    /**
-     * Detect when the outputBits array starts with the START_SEQ
-     */
-    public boolean isStartSeq(int start) {
-      for (int i = 0; i < START_SEQ.length; i++) {
-        if (outputBits[start + i] != START_SEQ[i]) {
-          return false;
-        }
-      }
-      return true;
+      outputBits = outputBitsResampled;
     }
 
     /**
@@ -152,26 +169,38 @@ public class DosRead {
      * The next first symbol is the first bit of the first char.
      */
     public void decodeBitsToChar() {
+      // Affichage des bits
+      for (int i = 0; i < outputBits.length; i++) {
+        System.out.print(outputBits[i]);
+      }
 
       int start = 0;
-      while (start < outputBits.length - 8) {
-        if (isStartSeq(start)) {
+      int i = 0;
+      while (i < outputBits.length - 8) {
+        boolean isStart = true;
+        for (int j = 0; j < 8; j++) {
+          if (outputBits[i + j] != START_SEQ[j]) {
+            isStart = false;
+          }
+        }
+        if (isStart) {
+          start = i + 8;
           break;
         }
-        start++;
+        i++;
       }
-      if (start >= outputBits.length - 8) {
-        System.out.println("Pas de séquence de départ");
+      if (start == 0) {
+        System.out.println("Pas de séquence de départ trouvée");
         return;
       }
-      int nbChars = (outputBits.length - start) / 8;
-      decodedChars = new char[nbChars];
-      for (int i = 0; i < nbChars; i++) {
-        int charValue = 0;
-        for (int j = 0; j < 8; j++) {
-          charValue += outputBits[start + j + i * 8] * Math.pow(2, 7 - j);
+      int nbBits = (outputBits.length - start) / 8; 
+      decodedChars = new char[nbBits];
+      for (int j = 0; j < nbBits; j++) {
+        int value = 0;
+        for (int k = 0; k < 8; k++) {
+          value += outputBits[start + j * 8 + k] * Math.pow(2, 7 - k);
         }
-        decodedChars[i] = (char) charValue;
+        decodedChars[j] = (char) value;
       }
     }
 
@@ -180,11 +209,15 @@ public class DosRead {
      * @param data the array to print
      */
     public static void printIntArray(char[] data) {
-        for (int i = 0; i < data.length; i++) {
-            System.out.print(data[i]);
+        if (data == null) {
+            System.out.println("null");
+            return;
         }
+        for (int i = 0; i < data.length - 1; i++) {
+            System.out.print("'" + data[i] + "', ");
+        }
+        System.out.println("'" + data[data.length - 1]);
     }
-
 
     /**
      * Display a signal in a window
