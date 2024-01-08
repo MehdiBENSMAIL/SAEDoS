@@ -6,6 +6,9 @@
 // imports
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.List;
 import java.awt.Color;
@@ -126,9 +129,22 @@ public class DosSend {
         return dataChar.length;
     }
 
-    public void test() {
-        String text = input.nextLine();
-        System.out.println(text);
+    public int getFileData(String cheminFichier) {
+        Path path = Paths.get(cheminFichier);
+
+        try {
+            // Read the lines and store them into a char array
+            List<String> lines = Files.readAllLines(path);
+            String text = "";
+            for (String line : lines) {
+                text += line;
+            }
+            dataChar = text.toCharArray();
+            return dataChar.length;
+        } catch (Exception e) {
+            System.out.println("Erreur de lecture du fichier");
+            return 0;
+        }      
     }
 
     /**
@@ -326,7 +342,6 @@ public class DosSend {
                     // Check if the selected file is a .txt file
                     if (filename.endsWith(".txt")) {
                         System.out.println("You selected : " + filename);
-                        System.exit(0);
                         return filename;
                     } else {
                         System.out.println("Please select a .txt file.");
@@ -340,11 +355,13 @@ public class DosSend {
 
     public static void main(String[] args) {
         String filename = graphicalInterface();
+
         // cree un objet DosSend
         DosSend dosSend = new DosSend("DosOok_message.wav");
         // lit le texte a envoyer depuis l'entree standard
         // et calcule la duree de l'audio correspondant
-        dosSend.duree = (double) (dosSend.readTextData() + dosSend.START_SEQ.length / 8) * 8.0 / dosSend.BAUDS;
+        // dosSend.duree = (double) (dosSend.readTextData() + dosSend.START_SEQ.length / 8) * 8.0 / dosSend.BAUDS;
+        dosSend.duree = (double) (dosSend.getFileData(filename) + dosSend.START_SEQ.length / 8) * 8.0 / dosSend.BAUDS;
 
         // genere le signal module apres avoir converti les données en bits
         dosSend.modulateData(dosSend.charToBits(dosSend.dataChar));

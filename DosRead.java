@@ -135,11 +135,6 @@ public class DosRead {
           resampledAudio[i] = sum / period;
       }
 
-      // afiche les valeurs d'entrée
-      for (int i = 0; i < resampledAudio.length; i++) {
-        System.out.print(resampledAudio[i]+" ");
-      }
-
       // Apply threshold to create outputBits array
       outputBits = new int[newLength];
       for (int i = 0; i < newLength; i++) {
@@ -147,14 +142,14 @@ public class DosRead {
       }
 
       // Ajoute la séquence de départ
-      int[] outputBitsWithStart = new int[outputBits.length + 8];
-      for (int i = 0; i < 8; i++) {
-        outputBitsWithStart[i] = START_SEQ[i];
-      }
-      for (int i = 0; i < outputBits.length; i++) {
-        outputBitsWithStart[i + 8] = outputBits[i];
-      }
-      outputBits = outputBitsWithStart;
+      // int[] outputBitsWithStart = new int[outputBits.length + 8];
+      // for (int i = 0; i < 8; i++) {
+      //   outputBitsWithStart[i] = START_SEQ[i];
+      // }
+      // for (int i = 0; i < outputBits.length; i++) {
+      //   outputBitsWithStart[i + 8] = outputBits[i];
+      // }
+      // outputBits = outputBitsWithStart;
     }
 
     /**
@@ -190,12 +185,6 @@ public class DosRead {
           value += outputBits[start + j * 8 + k] * Math.pow(2, 7 - k);
         }
         decodedChars[j] = (char) value;
-      }
-
-      // Affiche les bits de sortie
-      System.out.println();
-      for (int j = 0; j < outputBits.length; j++) {
-        System.out.print(outputBits[j]+" ");
       }
     }
 
