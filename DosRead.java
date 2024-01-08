@@ -80,18 +80,9 @@ public class DosRead {
             int value = (b2 << 8) | (b1 & 0xFF);
             // On convertit l'entier en double
             audio[i] = (double) value;
+
         }
 
-        // On normalise les valeurs entre -1 et 1
-        // double max = 0;
-        // for (int i = 0; i < audio.length; i++) {
-        //     if (Math.abs(audio[i]) > max) {
-        //         max = Math.abs(audio[i]);
-        //     }
-        // }
-        // for (int i = 0; i < audio.length; i++) {
-        //     audio[i] /= max;
-        // }
     }
 
     /**
@@ -111,27 +102,25 @@ public class DosRead {
      * @param n the number of samples to average
      */
     public void audioLPFilter(int n) {
-      double[] audioFiltered = new double[audio.length];
-      for (int i = 0; i < audio.length; i++) {
-          double sum = 0;
-          int count = 0;
-
-          // Calculer la moyenne mobile sur les échantillons voisins
-          for (int j = Math.max(0, i - n + 1); j <= Math.min(audio.length - 1, i); j++) {
-              sum += audio[j];
-              count++;
+      // Filtre passe-bas
+      // On crée le tableau de sortie
+      double[] output = new double[audio.length];
+      // On parcourt le tableau de sortie
+      for (int i = 0; i < output.length; i++) {
+        // On calcule la moyenne des échantillons
+        double sum = 0;
+        for (int j = 0; j < n; j++) {
+          if (i - j >= 0) {
+            sum += audio[i - j];
           }
-
-          // Appliquer la moyenne mobile
-          audioFiltered[i] = sum / count;
+        }
+        output[i] = sum / n;
       }
+      audio = output;
 
-      audio = audioFiltered;
-
-      // Convertir les valeurs filtrées en bits
-      outputBits = new int[audio.length];
-      for (int i = 0; i < audio.length; i++) {
-          outputBits[i] = (int) audio[i];
+      // Affichage des bits
+      for (int i = 0; i < output.length; i++) {
+        System.out.print(output[i]+" ");
       }
     }
 
@@ -141,26 +130,22 @@ public class DosRead {
      * @param threshold the threshold that separates 0 and 1
      */
     public void audioResampleAndThreshold(int period, int threshold){
-      // On récupère la taille du tableau de sortie
-      int nbBits = outputBits.length / period;
-      // On crée le tableau de sortie
-      int[] outputBitsResampled = new int[nbBits];
-      // On parcourt le tableau de sortie
-      for (int i = 0; i < nbBits; i++) {
-        // On calcule la moyenne des bits sur la période
-        int sum = 0;
-        for (int j = 0; j < period; j++) {
-          sum += outputBits[i * period + j];
-        }
-        int average = sum / period;
-        // On applique le seuil
-        if (average > threshold) {
-          outputBitsResampled[i] = 1;
-        } else {
-          outputBitsResampled[i] = 0;
-        }
+      // Resample the audio array
+      int newLength = audio.length / period;
+      double[] resampledAudio = new double[newLength];
+      for (int i = 0; i < newLength; i++) {
+          double sum = 0;
+          for (int j = i * period; j < (i + 1) * period; j++) {
+              sum += audio[j];
+          }
+          resampledAudio[i] = sum / period;
       }
-      outputBits = outputBitsResampled;
+
+      // Apply threshold to create outputBits array
+      outputBits = new int[newLength];
+      for (int i = 0; i < newLength; i++) {
+          outputBits[i] = (resampledAudio[i] > threshold) ? 1 : 0;
+      }
     }
 
     /**
@@ -169,11 +154,6 @@ public class DosRead {
      * The next first symbol is the first bit of the first char.
      */
     public void decodeBitsToChar() {
-      // Affichage des bits
-      for (int i = 0; i < outputBits.length; i++) {
-        System.out.print(outputBits[i]);
-      }
-
       int start = 0;
       int i = 0;
       while (i < outputBits.length - 8) {
@@ -189,10 +169,10 @@ public class DosRead {
         }
         i++;
       }
-      if (start == 0) {
-        System.out.println("Pas de séquence de départ trouvée");
-        return;
-      }
+      // if (start == 0) {
+      //   System.out.println("Pas de séquence de départ trouvée");
+      //   return;
+      // }
       int nbBits = (outputBits.length - start) / 8; 
       decodedChars = new char[nbBits];
       for (int j = 0; j < nbBits; j++) {
@@ -214,9 +194,9 @@ public class DosRead {
             return;
         }
         for (int i = 0; i < data.length - 1; i++) {
-            System.out.print("'" + data[i] + "', ");
+            System.out.print(data[i]);
         }
-        System.out.println("'" + data[data.length - 1]);
+        System.out.println(data[data.length - 1]);
     }
 
     /**
@@ -283,13 +263,13 @@ public class DosRead {
         // reverse the negative values
         dosRead.audioRectifier();
         // apply a low pass filter
-        dosRead.audioLPFilter(44);
+        // dosRead.audioLPFilter(44);
         // Resample audio data and apply a threshold to output only 0 & 1
         dosRead.audioResampleAndThreshold(dosRead.sampleRate/BAUDS, 12000 );
-
         dosRead.decodeBitsToChar();
         if (dosRead.decodedChars != null){
-            System.out.print("Message décodé : ");
+            System.out.print("\t------------------------------\n");
+            System.out.print("\tMessage décodé : ");
             printIntArray(dosRead.decodedChars);
         }
         displaySig(dosRead.audio, 0, dosRead.audio.length-1, "line", "Signal audio");

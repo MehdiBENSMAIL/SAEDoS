@@ -102,11 +102,17 @@ public class DosSend {
      * after normalizing its amplitude to the maximum value of the format (8 bits signed)
      */
     public void writeNormalizeWavData(){
+        double max = 0;
         for (int i = 0; i < dataMod.length; i++) {
-            dataMod[i] = dataMod[i] * MAX_AMP;
+            if(Math.abs(dataMod[i]) > max){
+                max = Math.abs(dataMod[i]);
+            }
         }
         for (int i = 0; i < dataMod.length; i++) {
-            writeLittleEndian((int)dataMod[i], FMT/8, outStream);
+            dataMod[i] = dataMod[i] / max * MAX_AMP;
+        }
+        for (int i = 0; i < dataMod.length; i++) {
+            writeLittleEndian((int)dataMod[i], FMT / 8, outStream);
         }
     }
 
@@ -129,7 +135,7 @@ public class DosSend {
         byte[] bits = new byte[chars.length * 8];
         for (int i = 0; i < chars.length; i++) {
             for (int j = 0; j < 8; j++) {
-                bits[i * 8 + j] = (byte) ((chars[i] >> (7 - j)) & 1);
+                bits[i * 8 + j] = (byte)((chars[i] >> (7 - j)) & 1);
             }
         }
         return bits;
