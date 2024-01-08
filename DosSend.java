@@ -9,6 +9,9 @@ import java.io.FileOutputStream;
 import java.util.Scanner;
 import java.util.List;
 import java.awt.Color;
+import java.awt.FileDialog;
+import java.awt.Frame;
+
 
 public class DosSend {
     final int FECH = 44100; // frequence d'echantillonnage
@@ -289,7 +292,54 @@ public class DosSend {
         StdDraw.show();
     }
 
+    public static String graphicalInterface() {
+        StdDraw.enableDoubleBuffering();
+        StdDraw.setCanvasSize(1280, 720);
+        StdDraw.setXscale(0, 1280);
+        StdDraw.setYscale(0, 720);
+        StdDraw.setTitle("Graphical Interface");
+        StdDraw.clear(StdDraw.BLACK);
+        StdDraw.setPenColor(StdDraw.WHITE);
+        StdDraw.setPenRadius(0.005);
+
+        while (true) {
+            // create a button to open the file explorer
+            StdDraw.rectangle(640, 360, 200, 50);
+            StdDraw.text(640, 360, "Open a file");
+            StdDraw.show();
+            // wait for the user to click the button
+            while (!StdDraw.isMousePressed()) {
+                StdDraw.pause(100);
+            }
+            // get the position of the click
+            double x = StdDraw.mouseX();
+            double y = StdDraw.mouseY();
+            // if the click is inside the button
+            if (x > 440 && x < 840 && y > 310 && y < 410) {
+                // open the file explorer
+                FileDialog fd = new FileDialog((Frame) null, "Choose a file", FileDialog.LOAD);
+                fd.setVisible(true);
+                String filename = fd.getFile();
+                if (filename == null) {
+                    System.out.println("No file selected.");
+                } else {
+                    // Check if the selected file is a .txt file
+                    if (filename.endsWith(".txt")) {
+                        System.out.println("You selected : " + filename);
+                        System.exit(0);
+                        return filename;
+                    } else {
+                        System.out.println("Please select a .txt file.");
+                    }
+                }
+            }
+            // Clear the screen for the next iteration
+            StdDraw.clear(StdDraw.BLACK);
+        }
+    }
+
     public static void main(String[] args) {
+        String filename = graphicalInterface();
         // cree un objet DosSend
         DosSend dosSend = new DosSend("DosOok_message.wav");
         // lit le texte a envoyer depuis l'entree standard
