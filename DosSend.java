@@ -265,9 +265,7 @@ public class DosSend {
             if (color_index > 7) {
                 color_index = 0; // loops back to the first color if too many signals
             }
-            for (int j = 0; j < listOfSigs.get(i).length; j++) {
-                StdDraw.setPenColor(COLORS[color_index]); // set the color of the signal
-            }
+            StdDraw.setPenColor(COLORS[color_index]); // set the color of the signal
             if (mode.equals("line")) {
                 for (int j = start; j < stop - 1; j++) {
                     StdDraw.line(j, listOfSigs.get(i)[j], j + 1, listOfSigs.get(i)[j + 1]);
