@@ -32,9 +32,9 @@ Exécution de DosRead.java
 >> java DosRead DosOok_message.wav
 
 >> Fichier audio: DosOok_message.wav
-        Frequence d'echantillonage: 44100 Hz
-        Bits per Sample: 16 bits
-        Data Size: 141120 bytes
+        Frequence d'echantillonage : 44100 Hz
+        Bits par echantillon : 16 bits
+        Taille : 141120 bytes
         ------------------------------
         Message décodé : Message top secret
 
