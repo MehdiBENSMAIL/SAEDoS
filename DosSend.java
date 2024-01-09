@@ -321,7 +321,7 @@ public class DosSend {
         StdDraw.setCanvasSize(1280, 720);
         StdDraw.setXscale(0, 1280);
         StdDraw.setYscale(0, 720);
-        StdDraw.setTitle("Graphical Interface");
+        StdDraw.setTitle("DosSend Interface - Ouvrir un fichier");
         StdDraw.clear(StdDraw.BLACK);
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.setPenRadius(0.005);
@@ -329,7 +329,7 @@ public class DosSend {
         while (true) {
             // create a button to open the file explorer
             StdDraw.rectangle(640, 360, 200, 50);
-            StdDraw.text(640, 360, "Open a file");
+            StdDraw.text(640, 360, "Ouvrir un fichier");
             StdDraw.show();
             // wait for the user to click the button
             while (!StdDraw.isMousePressed()) {
@@ -341,18 +341,18 @@ public class DosSend {
             // if the click is inside the button
             if (x > 440 && x < 840 && y > 310 && y < 410) {
                 // open the file explorer
-                FileDialog fd = new FileDialog((Frame) null, "Choose a file", FileDialog.LOAD);
+                FileDialog fd = new FileDialog((Frame) null, "Choisir un fichier", FileDialog.LOAD);
                 fd.setVisible(true);
                 String filename = fd.getFile();
                 if (filename == null) {
-                    System.out.println("No file selected.");
+                    System.out.println("Aucun fichier choisi.");
                 } else {
                     // Check if the selected file is a .txt file
                     if (filename.endsWith(".txt")) {
-                        System.out.println("You selected : " + filename);
+                        System.out.println("Vous avez choisi : " + filename);
                         return filename;
                     } else {
-                        System.out.println("Please select a .txt file.");
+                        System.out.println("Veuillez choisir un fichier .txt");
                     }
                 }
             }

@@ -1,0 +1,53 @@
+######################################################
+Exécution de DosSend.java
+######################################################
+
+>> java DosSend < haHa.txt
+
+>> Message : Message top secret
+        Nombre de symboles : 19
+        Nombre d'echantillons : 67032
+        Duree : 1.6 s*
+
+-----------------------------------------------------
+
+>> java DosSend
+
+*sélection graphique du fichier txt**
+
+>> Vous avez choisi : haHa.txt
+Message : Message top secret
+        Nombre de symboles : 19
+        Nombre d'echantillons : 67032
+        Duree : 1.6 s
+
+
+
+----------------------------------------------------
+
+####################################################
+Exécution de DosRead.java
+####################################################
+
+>> java DosRead DosOok_message.wav
+
+>> Fichier audio: DosOok_message.wav
+        Sample Rate: 44100 Hz
+        Bits per Sample: 16 bits
+        Data Size: 141120 bytes
+        ------------------------------
+        Message décodé : Message top secret
+
+----------------------------------------------------
+
+>> java DosRead
+
+*selection graphique du ficher audio wav*
+
+>> Vous avez choisi : DosOok_message.wav
+Fichier audio: DosOok_message.wav
+        Sample Rate: 44100 Hz
+        Bits per Sample: 16 bits
+        Data Size: 141120 bytes
+        ------------------------------
+        Message décodé : Message top secret

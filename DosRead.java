@@ -37,7 +37,6 @@
               bitsPerSample = byteArrayToInt(header, 34, 16);
               // pour la taille des donnees, c'est a l'offset 40
               dataSize = byteArrayToInt(header, 40, 32);
-              System.out.println(dataSize);
           } catch (FileNotFoundException e) {
               e.printStackTrace();
           } catch (IOException e) {
@@ -96,52 +95,8 @@
        */
       public void audioRectifier(){
         for (int i = 0; i < audio.length; i++) {
-<<<<<<< Updated upstream
           if (audio[i] < 0) {
             audio[i] = Math.abs(audio[i]);
-=======
-            // On récupère les deux octets correspondant à l'échantillon
-            byte b1 = audioData[2 * i];
-            byte b2 = audioData[2 * i + 1];
-            // On les convertit en entier
-            int i1 = (int) b1;
-            int i2 = (int) b2;
-            // On les convertit en double
-            double d1 = (double) i1;
-            double d2 = (double) i2;
-            // On les combine pour obtenir l'échantillon
-            audio[i] = d1 + d2 * 256;
-        }
-
-    }
-
-    /**
-     * Reverse the negative values of the audio array
-     */
-    public void audioRectifier(){
-      for (int i = 0; i < audio.length; i++) {
-        if (audio[i] < 0) {
-          audio[i] = Math.abs(audio[i]);
-        }
-      }
-    }
-
-    /**
-     * Apply a low pass filter to the audio array
-     * Fc = (1/2n)*FECH
-     * @param n the number of samples to average
-     */
-    public void audioLPFilter(int n) {
-      // On crée le tableau de sortie
-      double[] output = new double[audio.length];
-      // On parcourt le tableau de sortie
-      for (int i = 0; i < output.length; i++) {
-        // On calcule la moyenne des échantillons
-        double sum = 0;
-        for (int j = 0; j < n; j++) {
-          if (i - j >= 0) {
-            sum += audio[i - j];
->>>>>>> Stashed changes
           }
         }
       }
@@ -231,14 +186,6 @@
           decodedChars[j] = (char) value;
         }
       }
-<<<<<<< Updated upstream
-=======
-
-      for (int j = 0; j < decodedChars.length; j++) {
-        System.out.print(j + " : " + decodedChars[j] + "\n");
-      }
-    }
->>>>>>> Stashed changes
 
     /**
      * Print the elements of an array
@@ -302,7 +249,7 @@
         StdDraw.setCanvasSize(1280, 720);
         StdDraw.setXscale(0, 1280);
         StdDraw.setYscale(0, 720);
-        StdDraw.setTitle("Graphical Interface");
+        StdDraw.setTitle("DosRead - Ouvrir un fichier");
         StdDraw.clear(StdDraw.BLACK);
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.setPenRadius(0.005);
