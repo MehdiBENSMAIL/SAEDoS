@@ -1,3 +1,7 @@
+// coding : UTF-8
+// SAE-01 DoS 2024
+// BEN SMAIL Mehdi - C1
+// FROEHLY Jean-Baptiste - B2
 
   import java.io.*;
   import java.awt.Frame;
