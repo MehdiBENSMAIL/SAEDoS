@@ -2,5 +2,5 @@ projectKey=SAEDOS
 serverUrl=http://sonar.iut-bm.univ-fcomte.fr:9000
 serverVersion=9.9.0.65466
 dashboardUrl=http://sonar.iut-bm.univ-fcomte.fr:9000/dashboard?id=SAEDOS
-ceTaskId=AYztW5-MlMRfofdFYMAH
-ceTaskUrl=http://sonar.iut-bm.univ-fcomte.fr:9000/api/ce/task?id=AYztW5-MlMRfofdFYMAH
+ceTaskId=AYztcl3-lMRfofdFYMAV
+ceTaskUrl=http://sonar.iut-bm.univ-fcomte.fr:9000/api/ce/task?id=AYztcl3-lMRfofdFYMAV

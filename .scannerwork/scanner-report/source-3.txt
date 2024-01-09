@@ -14,9 +14,14 @@ import java.util.List;
 import java.awt.Color;
 import java.awt.FileDialog;
 import java.awt.Frame;
-
+import java.io.IOException;
+import java.util.logging.Logger;
 
 public class DosSend {
+
+    // Logger
+    private static final Logger logger = Logger.getLogger(DosSend.class.getName());
+
     final int FECH = 44100; // frequence d'echantillonnage
     final int FP = 1000; // frequence de la porteuses
     final int BAUDS = 100; // debit en symboles par seconde
@@ -175,10 +180,9 @@ public class DosSend {
                 index++;
             }
         }
-        for (int i = 0; i < bits.length; i++) { // add the data
-            for (int j = 0; j < FECH / BAUDS && index < dataMod.length; j++) {
+        for (int i = 0; i < bits.length; i++) {
+            for (int j = 0; j < FECH / BAUDS && index < dataMod.length; j++, index++) {
                 dataMod[index] = bits[i];
-                index++;
             }
         }
     }
@@ -203,7 +207,7 @@ public class DosSend {
         // draw the signal depending on the mode
         if (mode.equals("line")) {
             for (int i = start; i < stop - 1; i++) {
-                StdDraw.line(i, sig[i], i + 1, (double) sig[i + 1]);
+                StdDraw.line(i, sig[i], i + 1, sig[i + 1]);
             }
         } else if (mode.equals("point")) {
             for (int i = start; i < stop; i++) {
@@ -243,7 +247,7 @@ public class DosSend {
         StdDraw.setPenRadius(0.005);
         if (mode.equals("line")) {
             for (int i = start; i < stop - 1; i++) {
-                StdDraw.line(i, sig[i], i + 1, (double) sig[i + 1]);
+                StdDraw.line(i, sig[i], i + 1, sig[i + 1]);
             }
         } else if (mode.equals("point")) {
             for (int i = start; i < stop; i++) {
@@ -354,30 +358,31 @@ public class DosSend {
     }
 
     public static void main(String[] args) {
-        String filename = graphicalInterface();
-
-        // cree un objet DosSend
         DosSend dosSend = new DosSend("DosOok_message.wav");
-        // lit le texte a envoyer depuis l'entree standard
-        // et calcule la duree de l'audio correspondant
-        // dosSend.duree = (double) (dosSend.readTextData() + dosSend.START_SEQ.length / 8) * 8.0 / dosSend.BAUDS;
-        dosSend.duree = (double) (dosSend.getFileData(filename) + dosSend.START_SEQ.length /  (double) 8) * 8.0 / dosSend.BAUDS;
+        // Detects if there is data in the console
+        try {
+            if (System.in.available() > 0) {
+                dosSend.duree = (double) (dosSend.readTextData() + dosSend.START_SEQ.length / (double) 8) * 8.0 / dosSend.BAUDS;
+            } else {
+                String filename = graphicalInterface();
+                dosSend.duree = (double) (dosSend.getFileData(filename) + dosSend.START_SEQ.length  / (double) 8) * 8.0
+                        / dosSend.BAUDS;
+            }
 
-        // genere le signal module apres avoir converti les données en bits
-        dosSend.modulateData(dosSend.charToBits(dosSend.dataChar));
-        // Ecrit l'entete du fichier wav
-        dosSend.writeWavHeader();
-        // Ecrit les donnees audio dans le fichier wav
-        dosSend.writeNormalizeWavData();
+            dosSend.modulateData(dosSend.charToBits(dosSend.dataChar));
+            dosSend.writeWavHeader();
+            dosSend.writeNormalizeWavData();
 
-        // affiche les caracteristiques du signal dans la console
-        System.out.println("Message : " + String.valueOf(dosSend.dataChar));
-        System.out.println("\tNombre de symboles : " + dosSend.dataChar.length);
-        System.out.println("\tNombre d'echantillons : " + dosSend.dataMod.length);
-        System.out.println("\tDuree : " + dosSend.duree + " s");
-        System.out.println();
+            System.out.println("Message : " + String.valueOf(dosSend.dataChar));
+            System.out.println("\tNombre de symboles : " + dosSend.dataChar.length);
+            System.out.println("\tNombre d'echantillons : " + dosSend.dataMod.length);
+            System.out.println("\tDuree : " + dosSend.duree + " s");
+            System.out.println();
 
-        // exemple d'affichage du signal module dans une fenetre graphique
-        displaySig(dosSend.dataMod, 0, dosSend.dataMod.length, "line", "Signal apres modulation");
+            displaySig(dosSend.dataMod, 0, dosSend.dataMod.length, "line", "Signal apres modulation");
+        } catch (IOException e) {
+            // Handle the exception
+            logger.warning("An error occurred: " + e);
+        }
     }
 }

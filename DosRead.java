@@ -172,7 +172,7 @@ public class DosRead {
       for (int j = 0; j < nbBits; j++) {
         int value = 0;
         for (int k = 0; k < 8; k++) {
-          value += outputBits[start + j * 8 + k] * (double) Math.pow(2, 7 - k);
+          value += outputBits[start + j * 8 + k] * Math.pow(2, 7 - k);
         }
         decodedChars[j] = (char) value;
       }
@@ -212,7 +212,7 @@ public class DosRead {
         StdDraw.setPenRadius(0.005);       
         if(mode.equals("line")){
             for(int i = start; i < stop - 1; i++){
-                StdDraw.line(i, sig[i], i + 1, (double) sig[i + 1]);
+                StdDraw.line(i, sig[i], i + 1, sig[i + 1]);
             }
         } else if(mode.equals("point")){
             for(int i = start; i < stop; i++){

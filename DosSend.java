@@ -15,8 +15,13 @@ import java.awt.Color;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public class DosSend {
+
+    // Logger
+    private static final Logger logger = Logger.getLogger(DosSend.class.getName());
+
     final int FECH = 44100; // frequence d'echantillonnage
     final int FP = 1000; // frequence de la porteuses
     final int BAUDS = 100; // debit en symboles par seconde
@@ -175,10 +180,9 @@ public class DosSend {
                 index++;
             }
         }
-        for (int i = 0; i < bits.length; i++) { // add the data
-            for (int j = 0; j < FECH / BAUDS && index < dataMod.length; j++) {
+        for (int i = 0; i < bits.length; i++) {
+            for (int j = 0; j < FECH / BAUDS && index < dataMod.length; j++, index++) {
                 dataMod[index] = bits[i];
-                index++;
             }
         }
     }
@@ -203,7 +207,7 @@ public class DosSend {
         // draw the signal depending on the mode
         if (mode.equals("line")) {
             for (int i = start; i < stop - 1; i++) {
-                StdDraw.line(i, sig[i], i + 1, (double) sig[i + 1]);
+                StdDraw.line(i, sig[i], i + 1, sig[i + 1]);
             }
         } else if (mode.equals("point")) {
             for (int i = start; i < stop; i++) {
@@ -243,7 +247,7 @@ public class DosSend {
         StdDraw.setPenRadius(0.005);
         if (mode.equals("line")) {
             for (int i = start; i < stop - 1; i++) {
-                StdDraw.line(i, sig[i], i + 1, (double) sig[i + 1]);
+                StdDraw.line(i, sig[i], i + 1, sig[i + 1]);
             }
         } else if (mode.equals("point")) {
             for (int i = start; i < stop; i++) {
@@ -378,7 +382,7 @@ public class DosSend {
             displaySig(dosSend.dataMod, 0, dosSend.dataMod.length, "line", "Signal apres modulation");
         } catch (IOException e) {
             // Handle the exception
-            e.printStackTrace();
+            logger.warning("An error occurred: " + e);
         }
     }
 }

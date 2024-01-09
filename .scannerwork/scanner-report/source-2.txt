@@ -140,16 +140,6 @@ public class DosRead {
       for (int i = 0; i < newLength; i++) {
           outputBits[i] = (resampledAudio[i] > threshold) ? 1 : 0;
       }
-
-      // Ajoute la séquence de départ
-      // int[] outputBitsWithStart = new int[outputBits.length + 8];
-      // for (int i = 0; i < 8; i++) {
-      //   outputBitsWithStart[i] = START_SEQ[i];
-      // }
-      // for (int i = 0; i < outputBits.length; i++) {
-      //   outputBitsWithStart[i + 8] = outputBits[i];
-      // }
-      // outputBits = outputBitsWithStart;
     }
 
     /**
@@ -182,7 +172,7 @@ public class DosRead {
       for (int j = 0; j < nbBits; j++) {
         int value = 0;
         for (int k = 0; k < 8; k++) {
-          value += outputBits[start + j * 8 + k] * (double) Math.pow(2, 7 - k);
+          value += outputBits[start + j * 8 + k] * Math.pow(2, 7 - k);
         }
         decodedChars[j] = (char) value;
       }
@@ -222,7 +212,7 @@ public class DosRead {
         StdDraw.setPenRadius(0.005);       
         if(mode.equals("line")){
             for(int i = start; i < stop - 1; i++){
-                StdDraw.line(i, sig[i], i + 1, (double) sig[i + 1]);
+                StdDraw.line(i, sig[i], i + 1, sig[i + 1]);
             }
         } else if(mode.equals("point")){
             for(int i = start; i < stop; i++){
@@ -267,7 +257,7 @@ public class DosRead {
         // reverse the negative values
         dosRead.audioRectifier();
         // apply a low pass filter
-        // dosRead.audioLPFilter(44);
+        dosRead.audioLPFilter(44);
         // Resample audio data and apply a threshold to output only 0 & 1
         dosRead.audioResampleAndThreshold(dosRead.sampleRate/BAUDS, 12000 );
         dosRead.decodeBitsToChar();
