@@ -1,0 +1,9 @@
+sonar-scanner.bat -D"sonar.projectKey=SAEDOS" -D"sonar.sources=." -D"sonar.host.url=http://sonar.iut-bm.univ-fcomte.fr:9000" -D"sonar.login=sqp_62fabc1aed11da49a8a043fd8964f800628e40b3" -D "sonar.inclusions=DosSend.java,DosRead.java"
+
+sonar-scanner.bat -X ^
+  -Dsonar.projectKey=SAEDOS ^
+  -Dsonar.sources=. ^
+  -Dsonar.host.url=http://sonar.iut-bm.univ-fcomte.fr:9000 ^
+  -Dsonar.login=sqp_62fabc1aed11da49a8a043fd8964f800628e40b3 ^
+  -Dsonar.java.binaries=. ^
+  -Dsonar.inclusions=DosSend.java,DosRead.java
