@@ -23,11 +23,10 @@ public class DosRead {
    * Constructor that opens the FileInputStream
    * and reads sampleRate, bitsPerSample and dataSize
    * from the header of the wav file
-   * 
    * @param path the path of the wav file to read
    */
   public void readWavHeader(String path) {
-
+    
     byte[] header = new byte[44]; // The header is 44 bytes long
     try {
       fileInputStream = new FileInputStream(path);
@@ -48,7 +47,6 @@ public class DosRead {
 
   /**
    * Helper method to convert a little-endian byte array to an integer
-   * 
    * @param bytes  the byte array to convert
    * @param offset the offset in the byte array
    * @param fmt    the format of the integer (16 or 32 bits)
@@ -107,7 +105,6 @@ public class DosRead {
   /**
    * Apply a low pass filter to the audio array
    * Fc = (1/2n)*FECH
-   * 
    * @param n the number of samples to average
    */
   public void audioLPFilter(int n) {
@@ -129,28 +126,27 @@ public class DosRead {
 
   /**
    * Resample the audio array and apply a threshold
-   * 
    * @param period    the number of audio samples by symbol
    * @param threshold the threshold that separates 0 and 1
    */
-  public void audioResampleAndThreshold(int period, int threshold) {
+  public void audioResampleAndThreshold(int period, int threshold){
     int newLength = audio.length / period;
     double[] resampledAudio = new double[newLength];
     outputBits = new int[newLength];
 
     for (int i = 0; i < newLength; i++) {
-      // Calculate the average value for each period
-      double sum = 0;
-      for (int j = 0; j < period; j++) {
-        int index = i * period + j;
-        if (index < audio.length) {
-          sum += audio[index];
+        // Calculate the average value for each period
+        double sum = 0;
+        for (int j = 0; j < period; j++) {
+            int index = i * period + j;
+            if (index < audio.length) {
+                sum += audio[index];
+            }
         }
-      }
-      resampledAudio[i] = sum / period;
+        resampledAudio[i] = sum / period;
 
-      // Apply threshold and convert to binary values
-      outputBits[i] = (resampledAudio[i] >= threshold) ? 1 : 0;
+        // Apply threshold and convert to binary values
+        outputBits[i] = (resampledAudio[i] >= threshold) ? 1 : 0;
     }
   }
 
@@ -195,11 +191,11 @@ public class DosRead {
     }
   }
 
+
   /**
    * Print the elements of an array
-   * 
    * @param data the array to print
-   */
+  */
   public static void printIntArray(char[] data) {
     if (data == null || data.length == 0) {
       System.out.println("Le tableau est vide");
@@ -213,7 +209,6 @@ public class DosRead {
 
   /**
    * Display a signal in a window
-   * 
    * @param sig   the signal to display
    * @param start the first sample to display
    * @param stop  the last sample to display
@@ -254,7 +249,6 @@ public class DosRead {
   /**
    * Display a button that
    * reveals the file explorer upon getting clicked.
-   * 
    * @return the name of the selected file
    */
   public static String graphicalInterface() {
@@ -349,7 +343,7 @@ public class DosRead {
       System.out.print("\tMessage : ");
       printIntArray(dosRead.decodedChars);
     }
-    displaySig(dosRead.audio, 0, dosRead.audio.length - 1,
+    displaySig(dosRead.audio, 0, dosRead.audio.length-1,
         "line", "Signal audio");
     // Close the file input stream
     try {

@@ -132,7 +132,7 @@ public class DosSend {
      * @return the number of characters read
      */
     public int readTextData() {
-        String text = input.nextLine();
+        String text = input.nextLine()+" ";
         dataChar = text.toCharArray();
         return dataChar.length;
     }
@@ -395,7 +395,7 @@ public class DosSend {
             System.out.println("Message : "
             + String.valueOf(dosSend.dataChar));
             System.out.println("\tNombre de symboles : "
-            + dosSend.dataChar.length);
+            + (dosSend.dataChar.length-1));
             System.out.println("\tNombre d'echantillons : "
             + dosSend.dataMod.length);
             System.out.println("\tDuree : " + dosSend.duree + " s");
