@@ -129,7 +129,6 @@ public class DosSend {
 
     /**
      * Read the text data to encode and store them into dataChar
-     * 
      * @return the number of characters read
      */
     public int readTextData() {
@@ -237,7 +236,6 @@ public class DosSend {
 
     /**
      * Display a signal in a window
-     * 
      * @param sig   the signal to display
      * @param start the first sample to display
      * @param stop  the last sample to display
@@ -327,7 +325,6 @@ public class DosSend {
 
     /**
      * Display a button that reveals the file explorer upon getting clicked
-     * 
      * @return the name of the selected file
      */
     public static String graphicalInterface() {
