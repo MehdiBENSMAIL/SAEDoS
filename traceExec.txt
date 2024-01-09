@@ -22,8 +22,11 @@ Message : Message top secret
         Duree : 1.6 s
 
 
-
 ----------------------------------------------------
+
+Note : Le message du fichier txt est bien récupéré,
+et le fichier wav ne recontre par de problème à la génération et se lit correctement.
+Reste à voir si le message est correctement transmis
 
 ####################################################
 Exécution de DosRead.java
@@ -51,3 +54,6 @@ Fichier audio: DosOok_message.wav
         Taille : 141120 bytes
         ------------------------------
         Message décodé : Message top secret
+
+
+Note : Le message est correctement restitué donc l'algo semble bien fonctionner

@@ -28,11 +28,12 @@ public class DosSend {
     final int FMT = 16; // format des donnees
     final int MAX_AMP = (1 << (FMT - 1)) - 1; // amplitude max en entier
     final int CHANNELS = 1; // nombre de voies audio (1 = mono)
-    final int[] START_SEQ = { 1, 0, 1, 0, 1, 0, 1, 0 }; // sequence de synchro au dÃ©but
+    final int[] START_SEQ = { 1, 0, 1, 0, 1, 0, 1, 0 }; // sequence de synchro au debut
     final Scanner input = new Scanner(System.in); // pour lire le fichier texte
     // Liste de couleurs pour l'affichage multiple
-    static Color[] COLORS = { StdDraw.WHITE, StdDraw.BLUE, StdDraw.GREEN, StdDraw.ORANGE, StdDraw.PINK,
-            StdDraw.MAGENTA, StdDraw.YELLOW, StdDraw.CYAN };
+    static Color[] COLORS = { StdDraw.WHITE, StdDraw.BLUE, StdDraw.GREEN,
+         StdDraw.ORANGE, StdDraw.PINK, StdDraw.MAGENTA,
+         StdDraw.YELLOW, StdDraw.CYAN };
 
     long taille; // nombre d'octets de donnees a transmettre
     double duree; // duree de l'audio
