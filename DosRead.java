@@ -120,6 +120,7 @@
           }
           output[i] = sum / n;
         }
+        // On modifie le tableau audio avec le tableau de sortie
         audio = output;
       }
 
