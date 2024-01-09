@@ -133,10 +133,10 @@
         // Resample the audio array
         int newLength = audio.length / period;
         double[] resampledAudio = new double[newLength];
-        for (int i = 0; i < newLength; i++) {
+        for (int i = 0; i < newLength; i++) { // For each symbol
             double sum = 0;
-            for (int j = i * period; j < (i + 1) * period; j++) {
-                sum += audio[j];
+            for (int j = i * period; j < (i + 1) * period; j++) { // For each sample
+                sum += audio[j]; // Add the sample to the sum
             }
             resampledAudio[i] = sum / period;
         }
@@ -144,7 +144,8 @@
         // Apply threshold to create outputBits array
         outputBits = new int[newLength];
         for (int i = 0; i < newLength; i++) {
-            outputBits[i] = (resampledAudio[i] > threshold) ? 1 : 0;
+          // 1 if the sample is above the threshold, 0 otherwise
+          outputBits[i] = (resampledAudio[i] > threshold) ? 1 : 0;
         }
       }
 
@@ -158,6 +159,7 @@
         int i = 0;
         while (i < outputBits.length - 8) {
           boolean isStart = true;
+          // Check if the next 8 bits are the START_SEQ
           for (int j = 0; j < 8; j++) {
             if (outputBits[i + j] != START_SEQ[j]) {
               isStart = false;
@@ -173,8 +175,10 @@
           System.out.println("Pas de séquence de départ trouvée");
           return;
         }
+        // Decode the bits to chars
         int nbBits = (outputBits.length - start) / 8;
         decodedChars = new char[nbBits];
+        // For each char
         for (int j = 0; j < nbBits; j++) {
           int value = 0;
           for (int k = 0; k < 8; k++) {
