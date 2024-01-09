@@ -312,6 +312,10 @@ public class DosSend {
         StdDraw.show();
     }
 
+    /**
+     * Display a button that reveals the file explorer upon getting clicked
+     * @return the name of the selected file
+     */
     public static String graphicalInterface() {
         StdDraw.enableDoubleBuffering();
         StdDraw.setCanvasSize(1280, 720);

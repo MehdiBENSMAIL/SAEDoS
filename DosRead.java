@@ -146,6 +146,7 @@ public class DosRead {
      * Decode the outputBits array to a char array
      * The decoding is done by comparing the START_SEQ with the actual beginning of outputBits.
      * The next first symbol is the first bit of the first char.
+     * 
      */
     public void decodeBitsToChar() { 
       int start = 0;
@@ -183,7 +184,7 @@ public class DosRead {
      * @param data the array to print
      */
     public static void printIntArray(char[] data) {
-        if (data == null) {
+        if (data == null || data.length == 0) {
             System.out.println("null");
             return;
         }
@@ -234,6 +235,8 @@ public class DosRead {
     /**
     *  Un exemple de main qui doit pourvoir être exécuté avec les méthodes
     * que vous aurez conçues.
+    *
+    * @param args the command line arguments
     */
     public static void main(String[] args) {
         if (args.length != 1) {
