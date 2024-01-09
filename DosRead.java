@@ -287,7 +287,7 @@
                   System.out.println("Vous avez choisi : " + filename);
                   return filename;
                 } else {
-                  System.out.println("Mauvaus format (.wav)");
+                  System.out.println("Mauvais format (.wav)");
                 }
               }
             }

@@ -386,7 +386,7 @@ public class DosSend {
 
             displaySig(dosSend.dataMod, 0, dosSend.dataMod.length, "line", "Signal apres modulation");
         } catch (IOException e) {
-            // Handle the exception
+            // Pour faire plaisir à sonar
             logger.warning("An error occurred: " + e);
         }
     }
