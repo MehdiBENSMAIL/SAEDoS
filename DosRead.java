@@ -109,7 +109,7 @@
       public void audioLPFilter(int n) {
         // On crée le tableau de sortie
         double[] output = new double[audio.length];
-        // On parcourt le tableau de sortie
+        // On parcoure le tableau de sortie
         for (int i = 0; i < output.length; i++) {
           // On calcule la moyenne des échantillons
           double sum = 0;
