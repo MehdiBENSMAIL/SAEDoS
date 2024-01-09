@@ -37,47 +37,49 @@
               bitsPerSample = byteArrayToInt(header, 34, 16);
               // pour la taille des donnees, c'est a l'offset 40
               dataSize = byteArrayToInt(header, 40, 32);
+              System.out.println(dataSize);
           } catch (FileNotFoundException e) {
               e.printStackTrace();
           } catch (IOException e) {
-              throw new RuntimeException(e);
+            throw new RuntimeException(e);
           }
-      }
+          }
 
-      /**
-       * Helper method to convert a little-endian byte array to an integer
-       * @param bytes the byte array to convert
-       * @param offset    the offset in the byte array
-       * @param fmt   the format of the integer (16 or 32 bits)
-       * @return  the integer value
-       */
-      private static int byteArrayToInt(byte[] bytes, int offset, int fmt) {
-          if (fmt == 16)
-              return ((bytes[offset + 1] & 0xFF) << 8) | (bytes[offset] & 0xFF);
-          else if (fmt == 32)
+          /**
+          * Helper method to convert a little-endian byte array to an integer
+          * @param bytes the byte array to convert
+          * @param offset the offset in the byte array
+          * @param fmt the format of the integer (16 or 32 bits)
+          * @return the integer value
+          */
+          private static int byteArrayToInt(byte[] bytes,
+          int offset, int fmt) {
+            if (fmt == 16)
+              return ((bytes[offset+ 1] & 0xFF) << 8) | (bytes[offset] & 0xFF);
+            else if (fmt == 32)
               return ((bytes[offset + 3] & 0xFF) << 24) |
-                      ((bytes[offset + 2] & 0xFF) << 16) |
-                      ((bytes[offset + 1] & 0xFF) << 8) |
-                      (bytes[offset] & 0xFF);
-          else return (bytes[offset] & 0xFF);
-      }
-
-      /**
-       * Read the audio data from the wav file
-       * and convert it to an array of doubles
-       * that becomes the audio attribute
-       */
-      public void readAudioDouble(){
-          byte[] audioData = new byte[dataSize];
-          try {
-              fileInputStream.read(audioData);
-          } catch (IOException e) {
-              e.printStackTrace();
+                  ((bytes[offset + 2] & 0xFF) << 16) |
+                  ((bytes[offset + 1] & 0xFF) << 8) |
+                  (bytes[offset] & 0xFF);
+            else return (bytes[offset] & 0xFF);
           }
-          // On crée le tableau de sortie
-          audio = new double[audioData.length / 2];
-          // On parcourt le tableau de sortie
-          for (int i = 0; i < audio.length; i++) {
+
+          /**
+          * Read the audio data from the wav file
+          * and convert it to an array of doubles
+          * that becomes the audio attribute
+          */
+          public void readAudioDouble(){
+            byte[] audioData = new byte[dataSize];
+            try {
+              fileInputStream.read(audioData);
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+            // On crée le tableau de sortie
+            audio = new double[audioData.length / 2];
+            // On parcourt le tableau de sortie
+            for (int i = 0; i < audio.length; i++) {
               // On récupère les deux octets correspondant à l'échantillon
               byte b1 = audioData[i * 2];
               byte b2 = audioData[i * 2 + 1];
@@ -86,133 +88,135 @@
               // On convertit l'entier en double
               audio[i] = (double) value;
 
+            }
+
           }
 
-      }
-
-      /**
-       * Reverse the negative values of the audio array
-       */
-      public void audioRectifier(){
-        for (int i = 0; i < audio.length; i++) {
-          if (audio[i] < 0) {
-            audio[i] = Math.abs(audio[i]);
-          }
-        }
-      }
-
-      /**
-       * Apply a low pass filter to the audio array
-       * Fc = (1/2n)*FECH
-       * @param n the number of samples to average
-       */
-      public void audioLPFilter(int n) {
-        // On crée le tableau de sortie
-        double[] output = new double[audio.length];
-        // On parcoure le tableau de sortie
-        for (int i = 0; i < output.length; i++) {
-          // On calcule la moyenne des échantillons
-          double sum = 0;
-          for (int j = 0; j < n; j++) {
-            if (i - j >= 0) {
-              sum += audio[i - j];
+          /**
+          * Reverse the negative values of the audio array
+          */
+          public void audioRectifier(){
+          for (int i = 0; i < audio.length; i++) {
+            if (audio[i] < 0) {
+              audio[i] = Math.abs(audio[i]);
             }
           }
-          output[i] = sum / n;
-        }
-        // On modifie le tableau audio avec le tableau de sortie
-        audio = output;
-      }
+          }
 
-      /**
-       * Resample the audio array and apply a threshold
-       * @param period the number of audio samples by symbol
-       * @param threshold the threshold that separates 0 and 1
-       */
-      public void audioResampleAndThreshold(int period, int threshold){
-        // Resample the audio array
-        int newLength = audio.length / period;
-        double[] resampledAudio = new double[newLength];
-        for (int i = 0; i < newLength; i++) { // For each symbol
+          /**
+          * Apply a low pass filter to the audio array
+          * Fc = (1/2n)*FECH
+          * @param n the number of samples to average
+          */
+          public void audioLPFilter(int n) {
+          // On crée le tableau de sortie
+          double[] output = new double[audio.length];
+          // On parcourt le tableau de sortie
+          for (int i = 0; i < output.length; i++) {
+            // On calcule la moyenne des échantillons
             double sum = 0;
-            for (int j = i * period; j < (i + 1) * period; j++) { // For each sample
-                sum += audio[j]; // Add the sample to the sum
+            for (int j = 0; j < n; j++) {
+              if (i - j >= 0) {
+                sum += audio[i - j];
+              }
+            }
+            output[i] = sum / n;
+          }
+          audio = output;
+          }
+
+          /**
+          * Resample the audio array and apply a threshold
+          * @param period the number of audio samples by symbol
+          * @param threshold the threshold that separates 0 and 1
+          */
+          public void audioResampleAndThreshold(int period, int threshold){
+          // Resample the audio array
+          int newLength = audio.length / period;
+          double[] resampledAudio = new double[newLength];
+          for (int i = 0; i < newLength; i++) { // For each symbol
+            double sum = 0;
+            // For each sample
+            for (int j = i * period; j < (i + 1) * period; j++) {
+              sum += audio[j]; // Add the sample to the sum
             }
             resampledAudio[i] = sum / period;
-        }
+          }
 
-        // Apply threshold to create outputBits array
-        outputBits = new int[newLength];
-        for (int i = 0; i < newLength; i++) {
-          // 1 if the sample is above the threshold, 0 otherwise
-          outputBits[i] = (resampledAudio[i] > threshold) ? 1 : 0;
-        }
-      }
+          // Apply threshold to create outputBits array
+          outputBits = new int[newLength];
+          for (int i = 0; i < newLength; i++) {
+            // 1 if the sample is above the threshold, 0 otherwise
+            outputBits[i] = (resampledAudio[i] > threshold) ? 1 : 0;
+          }
+          }
 
-      /**
-       * Decode the outputBits array to a char array
-       * The decoding is done by comparing the START_SEQ with the actual beginning of outputBits.
-       * The next first symbol is the first bit of the first char.
-       */
-      public void decodeBitsToChar() {
-        int start = 0;
-        int i = 0;
-        while (i < outputBits.length - 8) {
-          boolean isStart = true;
-          // Check if the next 8 bits are the START_SEQ
-          for (int j = 0; j < 8; j++) {
-            if (outputBits[i + j] != START_SEQ[j]) {
-              isStart = false;
+          /**
+          * Decode the outputBits array to a char array.
+          * The decoding is done by comparing the START_SEQ with
+          * the actual beginning of outputBits.
+          * The next first symbol is the first bit of the first char.
+          */
+          public void decodeBitsToChar() {
+          int start = 0;
+          int i = 0;
+          while (i < outputBits.length - 8) {
+            boolean isStart = true;
+            // Check if the next 8 bits are the START_SEQ
+            for (int j = 0; j < 8; j++) {
+              if (outputBits[i + j] != START_SEQ[j]) {
+                isStart = false;
+              }
             }
+            if (isStart) {
+              start = i + 8;
+              break;
+            }
+            i++;
           }
-          if (isStart) {
-            start = i + 8;
-            break;
+          if (start == 0) {
+            System.out.println("Pas de séquence de départ trouvée");
+            return;
           }
-          i++;
-        }
-        if (start == 0) {
-          System.out.println("Pas de séquence de départ trouvée");
-          return;
-        }
-        // Decode the bits to chars
-        int nbBits = (outputBits.length - start) / 8;
-        decodedChars = new char[nbBits];
-        // For each char
-        for (int j = 0; j < nbBits; j++) {
-          int value = 0;
-          for (int k = 0; k < 8; k++) {
-            value += outputBits[start + j * 8 + k] * Math.pow(2, 7 - k);
+          // Decode the bits to chars
+          int nbBits = (outputBits.length - start) / 8;
+          decodedChars = new char[nbBits];
+          // For each char
+          for (int j = 0; j < nbBits; j++) {
+            int value = 0;
+            for (int k = 0; k < 8; k++) {
+              value += outputBits[start + j * 8 + k] * Math.pow(2, 7 - k);
+            }
+            decodedChars[j] = (char) value;
           }
-          decodedChars[j] = (char) value;
-        }
-      }
+          }
 
-    /**
-     * Print the elements of an array
-     * @param data the array to print
-     */
-    public static void printIntArray(char[] data) {
-        if (data == null || data.length == 0) {
+          /**
+          * Print the elements of an array
+          * @param data the array to print
+          */
+          public static void printIntArray(char[] data) {
+          if (data == null || data.length == 0) {
             System.out.println("null");
             return;
-        }
-        for (int i = 0; i < data.length - 1; i++) {
+          }
+          for (int i = 0; i < data.length - 1; i++) {
             System.out.print(data[i]);
-        }
-        System.out.println(data[data.length - 1]);
-    }
+          }
+          System.out.println(data[data.length - 1]);
+          }
 
-      /**
-       * Display a signal in a window
-       * @param sig  the signal to display
-       * @param start the first sample to display
-       * @param stop the last sample to display
-       * @param mode "line" or "point"
-       * @param title the title of the window
-       */
-      public static void displaySig(double[] sig, int start, int stop, String mode, String title){
-        StdDraw.enableDoubleBuffering();
+          /**
+          * Display a signal in a window
+          * @param sig the signal to display
+          * @param start the first sample to display
+          * @param stop the last sample to display
+          * @param mode "line" or "point"
+          * @param title the title of the window
+          */
+          public static void displaySig(double[] sig, int start, int stop,
+          String mode, String title){
+          StdDraw.enableDoubleBuffering();
           StdDraw.setCanvasSize(1920, 720);
           StdDraw.setXscale(start, stop);
           StdDraw.setTitle(title);
@@ -221,125 +225,130 @@
           StdDraw.setPenColor(StdDraw.WHITE);
           StdDraw.setPenRadius(0.005);
           if(mode.equals("line")){
-              for(int i = start; i < stop - 1; i++){
-                  StdDraw.line(i, sig[i], i + 1, sig[i + 1]);
-              }
+            for(int i = start; i < stop - 1; i++){
+              StdDraw.line(i, sig[i], i + 1, sig[i + 1]);
+            }
           } else if(mode.equals("point")){
-              for(int i = start; i < stop; i++){
-                  StdDraw.point(i, sig[i]);
-              }
+            for(int i = start; i < stop; i++){
+              StdDraw.point(i, sig[i]);
+            }
           }
           StdDraw.setPenColor(StdDraw.RED);
           StdDraw.setPenRadius(0.0075);
           StdDraw.line(start, 0.5, stop, 0.5);
           for(int i = start; i < stop; i += (stop - start) / 10){
-              StdDraw.setPenColor(StdDraw.RED);
-              StdDraw.line(i, 0.475, i, 0.525);
-              StdDraw.setPenColor(StdDraw.YELLOW);
-              StdDraw.text(i, 0.450, "" + i);
+            StdDraw.setPenColor(StdDraw.RED);
+            StdDraw.line(i, 0.475, i, 0.525);
+            StdDraw.setPenColor(StdDraw.YELLOW);
+            StdDraw.text(i, 0.450, "" + i);
           }
           StdDraw.show();
-      }
+          }
 
-      /**
-       * Display a button that reveals the file explorer upon getting clicked
-       * @return the name of the selected file
-       */
-      public static String graphicalInterface() {
-        StdDraw.enableDoubleBuffering();
-        StdDraw.setCanvasSize(1280, 720);
-        StdDraw.setXscale(0, 1280);
-        StdDraw.setYscale(0, 720);
-        StdDraw.setTitle("DosRead - Ouvrir un fichier");
-        StdDraw.clear(StdDraw.BLACK);
-        StdDraw.setPenColor(StdDraw.WHITE);
-        StdDraw.setPenRadius(0.005);
+          /**
+          * Display a button that
+          * reveals the file explorer upon getting clicked.
+          * @return the name of the selected file
+          */
+          public static String graphicalInterface() {
+          StdDraw.enableDoubleBuffering();
+          StdDraw.setCanvasSize(1280, 720);
+          StdDraw.setXscale(0, 1280);
+          StdDraw.setYscale(0, 720);
+          StdDraw.setTitle("Graphical Interface");
+          StdDraw.clear(StdDraw.BLACK);
+          StdDraw.setPenColor(StdDraw.WHITE);
+          StdDraw.setPenRadius(0.005);
 
-        while (true) {
+          while (true) {
             // create a button to open the file explorer
             StdDraw.rectangle(640, 360, 200, 50);
             StdDraw.text(640, 360, "Open a file");
             StdDraw.show();
             // wait for the user to click the button
             while (!StdDraw.isMousePressed()) {
-                StdDraw.pause(100);
+              StdDraw.pause(100);
             }
             // get the position of the click
             double x = StdDraw.mouseX();
             double y = StdDraw.mouseY();
             // if the click is inside the button
             if (x > 440 && x < 840 && y > 310 && y < 410) {
-                // open the file explorer
-                FileDialog fd = new FileDialog((Frame) null, "Choose a file", FileDialog.LOAD);
-                fd.setVisible(true);
-                String filename = fd.getFile();
-                if (filename == null) {
-                    System.out.println("No file selected.");
+              // open the file explorer
+              FileDialog fd = new FileDialog((Frame) null,
+              "Choose a file", FileDialog.LOAD);
+              fd.setVisible(true);
+              String filename = fd.getFile();
+              if (filename == null) {
+                System.out.println("Aucun fichier choisi.");
+              } else {
+                // Check if the selected file is a .wav file
+                if (filename.endsWith(".wav")) {
+                  System.out.println("Vous avez choisi : " + filename);
+                  return filename;
                 } else {
-                    // Check if the selected file is a .wav file
-                    if (filename.endsWith(".wav")) {
-                        System.out.println("You selected : " + filename);
-                        return filename;
-                    } else {
-                        System.out.println("Please select a .wav file.");
-                    }
+                  System.out.println("Mauvaus format (.wav)");
                 }
+              }
             }
             // Clear the screen for the next iteration
             StdDraw.clear(StdDraw.BLACK);
-        }
-    }
+          }
+          }
 
-      /**
-      *  Un exemple de main qui doit pourvoir être exécuté avec les méthodes
-      * que vous aurez conçues.
-      */
-      public static void main(String[] args) {
-        String wavFilePath;
-        if (args.length != 1) {
-          // No command line argument provided, use graphical interface
-          wavFilePath = graphicalInterface();
-        } else {
-          // Command line argument provided, use it as the file path
-          wavFilePath = args[0];
-        }
+          /**
+          * Un exemple de main qui doit pourvoir être exécuté avec les méthodes
+          * que vous aurez conçues.
+          */
+          public static void main(String[] args) {
+          String wavFilePath;
+          if (args.length != 1) {
+            // No command line argument provided, use graphical interface
+            wavFilePath = graphicalInterface();
+          } else {
+            // Command line argument provided, use it as the file path
+            wavFilePath = args[0];
+          }
 
-        if (wavFilePath == null) {
-          System.out.println("No file selected.");
-          return;
-        }
+          if (wavFilePath == null) {
+            System.out.println("Aucun fichier choisi.");
+            return;
+          }
 
-        // Open the WAV file and read its header
-        DosRead dosRead = new DosRead();
-        dosRead.readWavHeader(wavFilePath);
+          // Open the WAV file and read its header
+          DosRead dosRead = new DosRead();
+          dosRead.readWavHeader(wavFilePath);
 
-        // Rest of the code...
-        // Print the audio data properties
-        System.out.println("Fichier audio: " + wavFilePath);
-        System.out.println("\tSample Rate: " + dosRead.sampleRate + " Hz");
-        System.out.println("\tBits per Sample: " + dosRead.bitsPerSample + " bits");
-        System.out.println("\tData Size: " + dosRead.dataSize + " bytes");
+          // Rest of the code...
+          // Print the audio data properties
+          System.out.println("Fichier audio : " + wavFilePath);
+          System.out.println("\tFrequence d'echantillonage : "
+          + dosRead.sampleRate + " Hz");
+          System.out.println("\tBits par echantillon : "
+          + dosRead.bitsPerSample + " bits");
+          System.out.println("\tTaille : " + dosRead.dataSize + " bytes");
 
-        // Read the audio data
-        dosRead.readAudioDouble();
-        // reverse the negative values
-        dosRead.audioRectifier();
-        // apply a low pass filter
-        dosRead.audioLPFilter(44);
-        // Resample audio data and apply a threshold to output only 0 & 1
-        dosRead.audioResampleAndThreshold(dosRead.sampleRate/BAUDS, 12000 );
-        dosRead.decodeBitsToChar();
-        if (dosRead.decodedChars != null){
+          // Read the audio data
+          dosRead.readAudioDouble();
+          // reverse the negative values
+          dosRead.audioRectifier();
+          // apply a low pass filter
+          dosRead.audioLPFilter(44);
+          // Resample audio data and apply a threshold to output only 0 & 1
+          dosRead.audioResampleAndThreshold(dosRead.sampleRate/BAUDS,12000);
+          dosRead.decodeBitsToChar();
+          if (dosRead.decodedChars != null){
             System.out.print("\t------------------------------\n");
-            System.out.print("\tMessage décodé : ");
+            System.out.print("\tMessage : ");
             printIntArray(dosRead.decodedChars);
-        }
-        displaySig(dosRead.audio, 0, dosRead.audio.length-1, "line", "Signal audio");
-        // Close the file input stream
-        try {
-          dosRead.fileInputStream.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-  }
+          }
+          displaySig(dosRead.audio, 0, dosRead.audio.length-1,
+          "line", "Signal audio");
+          // Close the file input stream
+          try {
+            dosRead.fileInputStream.close();
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+          }
+          }
