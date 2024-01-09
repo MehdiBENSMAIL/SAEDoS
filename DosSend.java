@@ -147,6 +147,7 @@ public class DosSend {
             for (String line : lines) {
                 text += line;
             }
+            text += " ";
             dataChar = text.toCharArray();
             return dataChar.length;
         } catch (Exception e) {
