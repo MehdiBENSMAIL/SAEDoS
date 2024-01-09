@@ -132,23 +132,21 @@ public class DosRead {
    * @param threshold the threshold that separates 0 and 1
    */
   public void audioResampleAndThreshold(int period, int threshold) {
-    // Resample the audio array
-    int newLength = audio.length / period;
-    double[] resampledAudio = new double[newLength];
-    for (int i = 0; i < newLength; i++) { // For each symbol
+    // On crée le tableau de sortie
+    outputBits = new int[audio.length / period];
+    // On parcourt le tableau de sortie
+    for (int i = 0; i < outputBits.length; i++) {
+      // On calcule la moyenne des échantillons
       double sum = 0;
-      // For each sample
-      for (int j = i * period; j < (i + 1) * period; j++) {
-        sum += audio[j]; // Add the sample to the sum
+      for (int j = 0; j < period; j++) {
+        sum += audio[i * period + j];
       }
-      resampledAudio[i] = sum / period;
-    }
-
-    // Apply threshold to create outputBits array
-    outputBits = new int[newLength];
-    for (int i = 0; i < newLength; i++) {
-      // 1 if the sample is above the threshold, 0 otherwise
-      outputBits[i] = (resampledAudio[i] > threshold) ? 1 : 0;
+      // On applique le seuil
+      if (sum / period > threshold) {
+        outputBits[i] = 1;
+      } else {
+        outputBits[i] = 0;
+      }
     }
   }
 
@@ -163,6 +161,7 @@ public class DosRead {
     int i = 0;
     while (i < outputBits.length - 8) {
       boolean isStart = true;
+
       // Check if the next 8 bits are the START_SEQ
       for (int j = 0; j < 8; j++) {
         if (outputBits[i + j] != START_SEQ[j]) {
@@ -192,10 +191,11 @@ public class DosRead {
     }
   }
 
+
   /**
    * Print the elements of an array
    * @param data the array to print
-   */
+  */
   public static void printIntArray(char[] data) {
     if (data == null || data.length == 0) {
       System.out.println("null");
