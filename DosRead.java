@@ -37,6 +37,7 @@
               bitsPerSample = byteArrayToInt(header, 34, 16);
               // pour la taille des donnees, c'est a l'offset 40
               dataSize = byteArrayToInt(header, 40, 32);
+              System.out.println(dataSize);
           } catch (FileNotFoundException e) {
               e.printStackTrace();
           } catch (IOException e) {
@@ -54,7 +55,7 @@
           private static int byteArrayToInt(byte[] bytes,
           int offset, int fmt) {
             if (fmt == 16)
-              return ((bytes[offset + 1] & 0xFF) << 8) | (bytes[offset] & 0xFF);
+              return ((bytes[offset+ 1] & 0xFF) << 8) | (bytes[offset] & 0xFF);
             else if (fmt == 32)
               return ((bytes[offset + 3] & 0xFF) << 24) |
                   ((bytes[offset + 2] & 0xFF) << 16) |
@@ -91,43 +92,6 @@
 
           }
 
-<<<<<<< Updated upstream
-      }
-
-      /**
-       * Reverse the negative values of the audio array
-       */
-      public void audioRectifier(){
-        for (int i = 0; i < audio.length; i++) {
-          if (audio[i] < 0) {
-            audio[i] = Math.abs(audio[i]);
-          }
-        }
-      }
-
-      /**
-       * Apply a low pass filter to the audio array
-       * Fc = (1/2n)*FECH
-       * @param n the number of samples to average
-       */
-      public void audioLPFilter(int n) {
-        // On crée le tableau de sortie
-        double[] output = new double[audio.length];
-        // On parcoure le tableau de sortie
-        for (int i = 0; i < output.length; i++) {
-          // On calcule la moyenne des échantillons
-          double sum = 0;
-          for (int j = 0; j < n; j++) {
-            if (i - j >= 0) {
-              sum += audio[i - j];
-            }
-          }
-          output[i] = sum / n;
-        }
-        // On modifie le tableau audio avec le tableau de sortie
-        audio = output;
-      }
-=======
           /**
           * Reverse the negative values of the audio array
           */
@@ -138,7 +102,6 @@
             }
           }
           }
->>>>>>> Stashed changes
 
           /**
           * Apply a low pass filter to the audio array
@@ -282,21 +245,6 @@
           StdDraw.show();
           }
 
-<<<<<<< Updated upstream
-      /**
-       * Display a button that reveals the file explorer upon getting clicked
-       * @return the name of the selected file
-       */
-      public static String graphicalInterface() {
-        StdDraw.enableDoubleBuffering();
-        StdDraw.setCanvasSize(1280, 720);
-        StdDraw.setXscale(0, 1280);
-        StdDraw.setYscale(0, 720);
-        StdDraw.setTitle("DosRead - Ouvrir un fichier");
-        StdDraw.clear(StdDraw.BLACK);
-        StdDraw.setPenColor(StdDraw.WHITE);
-        StdDraw.setPenRadius(0.005);
-=======
           /**
           * Display a button that
           * reveals the file explorer upon getting clicked.
@@ -311,7 +259,6 @@
           StdDraw.clear(StdDraw.BLACK);
           StdDraw.setPenColor(StdDraw.WHITE);
           StdDraw.setPenRadius(0.005);
->>>>>>> Stashed changes
 
           while (true) {
             // create a button to open the file explorer
