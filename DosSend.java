@@ -18,22 +18,22 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public class DosSend {
-
     // Logger
-    private static final Logger logger = Logger.getLogger(DosSend.class.getName());
-
+    private static final Logger logger =
+    Logger.getLogger(DosSend.class.getName());
     final int FECH = 44100; // frequence d'echantillonnage
     final int FP = 1000; // frequence de la porteuses
     final int BAUDS = 100; // debit en symboles par seconde
     final int FMT = 16; // format des donnees
     final int MAX_AMP = (1 << (FMT - 1)) - 1; // amplitude max en entier
     final int CHANNELS = 1; // nombre de voies audio (1 = mono)
-    final int[] START_SEQ = { 1, 0, 1, 0, 1, 0, 1, 0 }; // sequence de synchro au debut
+    final int[] START_SEQ =
+    { 1, 0, 1, 0, 1, 0, 1, 0 }; // sequence de synchro au debut
     final Scanner input = new Scanner(System.in); // pour lire le fichier texte
     // Liste de couleurs pour l'affichage multiple
     static Color[] COLORS = { StdDraw.WHITE, StdDraw.BLUE, StdDraw.GREEN,
-         StdDraw.ORANGE, StdDraw.PINK, StdDraw.MAGENTA,
-         StdDraw.YELLOW, StdDraw.CYAN };
+            StdDraw.ORANGE, StdDraw.PINK, StdDraw.MAGENTA,
+            StdDraw.YELLOW, StdDraw.CYAN };
 
     long taille; // nombre d'octets de donnees a transmettre
     double duree; // duree de l'audio
@@ -59,7 +59,8 @@ public class DosSend {
      * @param octets     the integer to write
      * @param destStream the stream to write in
      */
-    public void writeLittleEndian(int octets, int taille, FileOutputStream destStream) {
+    public void writeLittleEndian(int octets, int taille,
+    FileOutputStream destStream) {
         char poidsFaible;
         while (taille > 0) {
             poidsFaible = (char) (octets & 0xFF);
@@ -83,17 +84,18 @@ public class DosSend {
 
         try {
             // [Declaration block of a WAVE format file]
-            outStream.write(new byte[] { 'R', 'I', 'F', 'F' }); // FileTypeBlocID
+            outStream.write(new byte[] { 'R', 'I', 'F', 'F' });//FileTypeBlocID
             writeLittleEndian((int) (nbBytes + 36), 4, outStream); // FileSize
             outStream.write(new byte[] { 'W', 'A', 'V', 'E' }); // FileFormatID
 
             // [Block describing the audio format]
-            outStream.write(new byte[] { 'f', 'm', 't', ' ' }); // FormatBlockID
+            outStream.write(new byte[] { 'f', 'm', 't', ' ' });// FormatBlockID
             writeLittleEndian(16, 4, outStream); // BlocSize
             writeLittleEndian(1, 2, outStream); // AudioFormat
             writeLittleEndian(CHANNELS, 2, outStream); // NbrCanaux
             writeLittleEndian(FECH, 4, outStream); // Frequence
-            writeLittleEndian(FECH * CHANNELS * FMT / 8, 4, outStream); // BytePerSec
+            writeLittleEndian(FECH * CHANNELS * FMT / 8,
+            4, outStream); // BytePerSec
             writeLittleEndian(CHANNELS * FMT / 8, 2, outStream); // BytePerBloc
             writeLittleEndian(FMT, 2, outStream); // BitsPerSample
 
@@ -108,8 +110,8 @@ public class DosSend {
 
     /**
      * Write the data in the wav file
-     * after normalizing its amplitude to the maximum value of the format (8 bits
-     * signed)
+     * after normalizing its amplitude to the maximum value of the format
+     * (8 bits signed)
      */
     public void writeNormalizeWavData() {
         try {
@@ -127,6 +129,7 @@ public class DosSend {
 
     /**
      * Read the text data to encode and store them into dataChar
+     * 
      * @return the number of characters read
      */
     public int readTextData() {
@@ -150,7 +153,7 @@ public class DosSend {
         } catch (Exception e) {
             System.out.println("Erreur de lecture du fichier");
             return 0;
-        }      
+        }
     }
 
     /**
@@ -162,14 +165,16 @@ public class DosSend {
         byte[] bits = new byte[chars.length * 8];
         for (int i = 0; i < chars.length; i++) { // for each char
             for (int j = 0; j < 8; j++) { // 8 bits per char
-                bits[i * 8 + j] = (byte) ((chars[i] >> (7 - j)) & 0x01); // 7 - j to get the most significant bit first
+                // 7 - j to get the most significant bit first
+                bits[i * 8 + j] = (byte) ((chars[i] >> (7 - j)) & 0x01);
             }
         }
         return bits;
     }
 
     /**
-     * Modulate the data to send and apply the symbol throughout via BAUDS and FECH.
+     * Modulate the data to send and apply
+     * the symbol throughout via BAUDS and FECH.
      * @param bits the data to modulate
      */
     public void modulateData(byte[] bits) {
@@ -196,7 +201,8 @@ public class DosSend {
      * @param mode  "line" or "point"
      * @param title the title of the window
      */
-    public static void displaySig(double[] sig, int start, int stop, String mode, String title) {
+    public static void displaySig(double[] sig, int start,
+    int stop, String mode, String title) {
         StdDraw.enableDoubleBuffering();
         StdDraw.setCanvasSize(1920, 720); // set the size of the window
         StdDraw.setTitle(title); // set the title of the window
@@ -231,13 +237,15 @@ public class DosSend {
 
     /**
      * Display a signal in a window
+     * 
      * @param sig   the signal to display
      * @param start the first sample to display
      * @param stop  the last sample to display
      * @param mode  "line" or "point"
      * @param title the title of the window
      */
-    public static void displaySig(int[] sig, int start, int stop, String mode, String title) {
+    public static void displaySig(int[] sig, int start,
+    int stop, String mode, String title) {
         StdDraw.enableDoubleBuffering();
         StdDraw.setCanvasSize(1920, 720);
         StdDraw.setXscale(start, stop);
@@ -275,7 +283,8 @@ public class DosSend {
      * @param mode       "line" or "point"
      * @param title      the title of the window
      */
-    public static void displaySig(List<double[]> listOfSigs, int start, int stop, String mode, String title) {
+    public static void displaySig(List<double[]> listOfSigs,
+    int start, int stop, String mode, String title) {
         StdDraw.enableDoubleBuffering();
         StdDraw.setCanvasSize(1920, 720);
         StdDraw.setXscale(start, stop);
@@ -287,12 +296,15 @@ public class DosSend {
         for (int i = 0; i < listOfSigs.size(); i++) {
             // change the color for every signal up to seven different colors
             if (color_index > 7) {
-                color_index = 0; // loops back to the first color if too many signals
+                // loops back to the first color if too many signals
+                color_index = 0;
             }
-            StdDraw.setPenColor(COLORS[color_index]); // set the color of the signal
+            // set the color of the signal
+            StdDraw.setPenColor(COLORS[color_index]);
             if (mode.equals("line")) {
                 for (int j = start; j < stop - 1; j++) {
-                    StdDraw.line(j, listOfSigs.get(i)[j], (double) j + 1, listOfSigs.get(i)[j + 1]);
+                    StdDraw.line(j, listOfSigs.get(i)[j],
+                    (double) j + 1, listOfSigs.get(i)[j + 1]);
                 }
             } else if (mode.equals("point")) {
                 for (int j = start; j < stop; j++) {
@@ -315,6 +327,7 @@ public class DosSend {
 
     /**
      * Display a button that reveals the file explorer upon getting clicked
+     * 
      * @return the name of the selected file
      */
     public static String graphicalInterface() {
@@ -342,7 +355,8 @@ public class DosSend {
             // if the click is inside the button
             if (x > 440 && x < 840 && y > 310 && y < 410) {
                 // open the file explorer
-                FileDialog fd = new FileDialog((Frame) null, "Choisir un fichier", FileDialog.LOAD);
+                FileDialog fd = new FileDialog((Frame) null,
+                "Choisir un fichier", FileDialog.LOAD);
                 fd.setVisible(true);
                 String filename = fd.getFile();
                 if (filename == null) {
@@ -367,10 +381,13 @@ public class DosSend {
         // Detects if there is data in the console
         try {
             if (System.in.available() > 0) {
-                dosSend.duree = (double) (dosSend.readTextData() + dosSend.START_SEQ.length / (double) 8) * 8.0 / dosSend.BAUDS;
+                dosSend.duree = (double) (dosSend.readTextData()
+                + dosSend.START_SEQ.length / (double) 8) * 8.0
+                        / dosSend.BAUDS;
             } else {
                 String filename = graphicalInterface();
-                dosSend.duree = (double) (dosSend.getFileData(filename) + dosSend.START_SEQ.length  / (double) 8) * 8.0
+                dosSend.duree = (double) (dosSend.getFileData(filename)
+                + dosSend.START_SEQ.length / (double) 8) * 8.0
                         / dosSend.BAUDS;
             }
 
@@ -378,13 +395,17 @@ public class DosSend {
             dosSend.writeWavHeader();
             dosSend.writeNormalizeWavData();
 
-            System.out.println("Message : " + String.valueOf(dosSend.dataChar));
-            System.out.println("\tNombre de symboles : " + dosSend.dataChar.length);
-            System.out.println("\tNombre d'echantillons : " + dosSend.dataMod.length);
+            System.out.println("Message : "
+            + String.valueOf(dosSend.dataChar));
+            System.out.println("\tNombre de symboles : "
+            + dosSend.dataChar.length);
+            System.out.println("\tNombre d'echantillons : "
+            + dosSend.dataMod.length);
             System.out.println("\tDuree : " + dosSend.duree + " s");
             System.out.println();
 
-            displaySig(dosSend.dataMod, 0, dosSend.dataMod.length, "line", "Signal apres modulation");
+            displaySig(dosSend.dataMod, 0, dosSend.dataMod.length,
+            "line", "Signal apres modulation");
         } catch (IOException e) {
             // Pour faire plaisir à sonar
             logger.warning("An error occurred: " + e);
