@@ -194,7 +194,6 @@ public class DosRead {
 
   /**
    * Print the elements of an array
-   * 
    * @param data the array to print
    */
   public static void printIntArray(char[] data) {
@@ -210,7 +209,6 @@ public class DosRead {
 
   /**
    * Display a signal in a window
-   * 
    * @param sig   the signal to display
    * @param start the first sample to display
    * @param stop  the last sample to display
@@ -251,7 +249,6 @@ public class DosRead {
   /**
    * Display a button that
    * reveals the file explorer upon getting clicked.
-   * 
    * @return the name of the selected file
    */
   public static String graphicalInterface() {
