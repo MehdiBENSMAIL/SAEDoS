@@ -360,8 +360,8 @@ public class DosSend {
         DosSend dosSend = new DosSend("DosOok_message.wav");
         // lit le texte a envoyer depuis l'entree standard
         // et calcule la duree de l'audio correspondant
-        // dosSend.duree = (double) (dosSend.readTextData() + dosSend.START_SEQ.length / 8) * 8.0 / dosSend.BAUDS;
-        dosSend.duree = (double) (dosSend.getFileData(filename) + dosSend.START_SEQ.length /  (double) 8) * 8.0 / dosSend.BAUDS;
+        dosSend.duree = (double) (dosSend.readTextData() + dosSend.START_SEQ.length / 8) * 8.0 / dosSend.BAUDS;
+        // dosSend.duree = (double) (dosSend.getFileData(filename) + dosSend.START_SEQ.length /  (double) 8) * 8.0 / dosSend.BAUDS;
 
         // genere le signal module apres avoir converti les données en bits
         dosSend.modulateData(dosSend.charToBits(dosSend.dataChar));
