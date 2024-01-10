@@ -5,10 +5,18 @@ public class TestLP {
     public static void main(String[] args) {
         LPFilter1 lpFilter1 = new LPFilter1();
         LPFilter2 lpFilter2 = new LPFilter2();
-            double[] signal = generateSignal(10);
-            double[] filteredSignal1 = lpFilter1.lpFilter(signal, 10, 5);
-            double[] filteredSignal2 = lpFilter2.lpFilter(signal, 10, 5);
-            displaySig(List.of(signal, filteredSignal1, filteredSignal2), 0, 10, "line", "Test");
+        double[] signal = generateSignal(100);
+        double[] filteredSignal2 = lpFilter2.lpFilter(signal, 10, 0.5);
+        double[] filteredSignal1 = lpFilter1.lpFilter(signal, 10, 0.5);
+        displaySig(List.of(signal, filteredSignal1, filteredSignal2), 0, signal.length, "line", "Low-pass filter");
+
+    }
+
+    public static void printArray(double[] array) {
+        for (double d : array) {
+            System.out.print(d + " ");
+        }
+        System.out.println();
     }
 
     /**
@@ -24,10 +32,8 @@ public class TestLP {
         return signal;
     }
 
-    static Color[] COLORS = { StdDraw.WHITE, StdDraw.BLUE, StdDraw.GREEN,
-        StdDraw.ORANGE, StdDraw.PINK, StdDraw.MAGENTA,
-        StdDraw.YELLOW, StdDraw.CYAN };
-
+    static Color[] COLORS = { StdDraw.BLUE, StdDraw.GREEN,
+            StdDraw.ORANGE };
 
     /**
      * Display signals in a window
@@ -38,7 +44,7 @@ public class TestLP {
      * @param title      the title of the window
      */
     public static void displaySig(List<double[]> listOfSigs,
-    int start, int stop, String mode, String title) {
+            int start, int stop, String mode, String title) {
         StdDraw.enableDoubleBuffering();
         StdDraw.setCanvasSize(1920, 720);
         StdDraw.setXscale(start, stop);
@@ -48,17 +54,12 @@ public class TestLP {
         StdDraw.setPenRadius(0.005);
         int color_index = 0;
         for (int i = 0; i < listOfSigs.size(); i++) {
-            // change the color for every signal up to seven different colors
-            if (color_index > 7) {
-                // loops back to the first color if too many signals
-                color_index = 0;
-            }
             // set the color of the signal
             StdDraw.setPenColor(COLORS[color_index]);
             if (mode.equals("line")) {
                 for (int j = start; j < stop - 1; j++) {
                     StdDraw.line(j, listOfSigs.get(i)[j],
-                    (double) j + 1, listOfSigs.get(i)[j + 1]);
+                            (double) j + 1, listOfSigs.get(i)[j + 1]);
                 }
             } else if (mode.equals("point")) {
                 for (int j = start; j < stop; j++) {

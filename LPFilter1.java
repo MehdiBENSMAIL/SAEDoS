@@ -14,42 +14,35 @@ public class LPFilter1 {
      * @return the filtered audio array (double[])
      */
     public double[] lpFilter(double[] inputSignal, double sampleFreq, double cutoffFreq) {
-        // More info on the butterworth filter : https://en.wikipedia.org/wiki/Butterworth_filter
-        int n = 44; // Order of the Butterworth filter
-        double normCutoffFreq = 2.0 * Math.PI * cutoffFreq / sampleFreq;
-        double[] b = new double[n + 1];
-        double[] a = new double[n + 1];
-        double[] outputSignal = new double[inputSignal.length];
+        int N = inputSignal.length;
+        double[] outputSignal = new double[N];
 
-        // Calculate Butterworth filter coefficients
-        for (int k = 0; k <= n; k++) {
-            b[k] = Math.pow(normCutoffFreq, n - k);
-            a[k] = binomialCoeff(n, k);
+        // Calculate filter coefficients
+        int M = 40; // Filter order
+        double[] h = new double[M];
+        double fc = cutoffFreq / sampleFreq;
+
+        for (int n = 0; n < M; n++) {
+            if (n == (M - 1) / 2) {
+                h[n] = 2 * Math.PI * fc;
+            } else {
+                h[n] = Math.sin(2 * Math.PI * fc * (n - (M - 1) / 2)) / (Math.PI * (n - (M - 1) / 2));
+            }
+            h[n] *= 0.54 - 0.46 * Math.cos(2 * Math.PI * n / (M - 1)); // Hamming window
         }
+
         // Apply the filter
-        for (int i = 0; i < inputSignal.length; i++) {
-            outputSignal[i] = 0.0;
-            for (int j = 0; j <= n; j++) {
+        for (int i = 0; i < N; i++) {
+            double sum = 0.0;
+            for (int j = 0; j < M; j++) {
                 if (i - j >= 0) {
-                    outputSignal[i] += b[j] * inputSignal[i - j] / a[0];
+                    sum += h[j] * inputSignal[i - j];
                 }
             }
+            outputSignal[i] = sum;
         }
-        return outputSignal;
-    }
 
-    /**
-     * Calculate the binomial coefficient
-     * @param n
-     * @param k
-     * @return the binomial coefficient
-     */
-    private double binomialCoeff(int n, int k) {
-        if (k == 0 || k == n) {
-            return 1.0;
-        } else {
-            return binomialCoeff(n - 1, k - 1) + binomialCoeff(n - 1, k);
-        }
+        return outputSignal;
     }
 
 }
