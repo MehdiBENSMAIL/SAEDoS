@@ -1,7 +1,38 @@
 Plan :
 Voir les méthodes utilisées, conditions de l'expérience
 
-1 - Method exponential moving average
+1 - Method moving average
 
-2 - Butterworth (récursif)
+2 - Method exponential moving average
+
+RESULTS FOR 2 sampleFreq
+LP1 = MA
+LP2 = EMA
+
+100 tests
+
+    10 values
+Average time for LPFilter1: 46620
+Average time for LPFilter2: 17520
+
+    100 values
+Average time for LPFilter1: 338810
+Average time for LPFilter2: 117130
+
+    1 000 values
+Average time for LPFilter1: 1064590
+Average time for LPFilter2: 749370
+
+    10 000 values
+Average time for LPFilter1: 3857740
+Average time for LPFilter2: 2416270
+
+    100 000 values
+Average time for LPFilter1: 25541750
+Average time for LPFilter2: 14794650
+
+    1 000 000 values
+Average time for LPFilter1: 101906910
+Average time for LPFilter2: 79375660
+
 
