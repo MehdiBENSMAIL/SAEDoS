@@ -3,25 +3,17 @@ import java.awt.Color;
 
 public class TestLP {
     public static void main(String[] args) {
-        long totalTime1 = 0;
-        long totalTime2 = 0;
-        for (int i = 0; i < 100; i++) {
-            LPFilter1 lpFilter1 = new LPFilter1();
-            LPFilter2 lpFilter2 = new LPFilter2();
-            double[] signal = generateSignal(1000000);
-            long t1 = System.nanoTime();
-            double[] filteredSignal1 = lpFilter1.lpFilter(signal, 2, 0.75);
-            totalTime1 += System.nanoTime() - t1;
-            t1 = System.nanoTime();
-            double[] filteredSignal2 = lpFilter2.lpFilter(signal, 2, 0.25);
-            totalTime2 += System.nanoTime() - t1;
-        }
-        System.out.println("Average time for LPFilter1: " + totalTime1 / 10);
-        System.out.println("Average time for LPFilter2: " + totalTime2 / 10);
-        /*
-         * displaySig(List.of(signal, filteredSignal1, filteredSignal2), 0,
-         * signal.length, "line", "Low-pass filter");
-         */
+        LPFilter1 lpFilter1 = new LPFilter1();
+        LPFilter2 lpFilter2 = new LPFilter2();
+        double[] signal = generateSignal(100);
+        long t1 = System.nanoTime();
+        double[] filteredSignal1 = lpFilter1.lpFilter(signal, 2, 0.75);
+        System.out.println("Temps d'exécution lp 1 (vert)   : " + (System.nanoTime() - t1));
+        long t0 = System.nanoTime();
+        double[] filteredSignal2 = lpFilter2.lpFilter(signal, 2, 0.25);
+        System.out.println("Temps d'exécution lp 2 (orange) : " + (System.nanoTime() - t0));
+        displaySig(List.of(signal, filteredSignal1, filteredSignal2), 0, signal.length, "line", "Low-pass filter");
+
     }
 
     public static void printArray(double[] array) {
@@ -33,7 +25,6 @@ public class TestLP {
 
     /**
      * Generate a random signal
-     * 
      * @param length
      * @return the generated signal
      */

@@ -5,11 +5,15 @@ Voir les méthodes utilisées, conditions de l'expérience
 
 2 - Method exponential moving average
 
+BLUE = SIGNAL
+GREEN = LP 1
+ORANGE = LP2
+
 RESULTS FOR 2 sampleFreq
 LP1 = MA
 LP2 = EMA
 
-100 tests
+100 tests per values set
 
     10 values
 Average time for LPFilter1: 46620
