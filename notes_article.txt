@@ -1,0 +1,7 @@
+Plan :
+Voir les méthodes utilisées, conditions de l'expérience
+
+1 - Method exponential moving average
+
+2 - Butterworth (récursif)
+
