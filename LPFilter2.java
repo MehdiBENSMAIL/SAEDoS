@@ -2,48 +2,30 @@
 // Date : 11/01/2024
 // Authors : Jean-Baptiste FROEHLY   - B2
 //           Mehdi         BEN SMAIL - C1
-// Low-pass filter Fast Fourier Transform (FFT)
+// Low-pass filter exponential moving average
+
 
 public class LPFilter2 {
-    // Filtre passe-bas basé sur fourier
-
-    public static void main(String[] args) {
-        // On crée un tableau de 1000 échantillons
-        double[] audio = new double[1000];
-        // On remplit le tableau avec des valeurs aléatoires
-        for (int i = 0; i < audio.length; i++) {
-            audio[i] = Math.random();
-        }
-        // On applique le filtre
-        audioLPFilter(audio, 10);
-    }
 
     /**
-     * Apply a low pass filter to the audio array (FFT)
-     * @param audioInput the input audio array (double[])
-     * @param sampleCount the number of samples to average
+     * Apply a low pass filter to the audio array using the exponential moving average method
+     * @param inputSignal the audio array to be filtered (double[])
+     * @param sampleFreq the sample frequency of the audio array (double
+     * @param cutoffFreq the cutoff frequency of the filter (double)
+     * @return the filtered audio array (double[])
      */
-    public static void audioLPFilter(double[] audio, int sampleCount) {
-        // On calcule la transformée de Fourier
-        Complex[] fourier = FFT.fft(audio);
-        // On crée un tableau de sortie
-        Complex[] output = new Complex[fourier.length];
-        // On parcourt le tableau de sortie
-        for (int i = 0; i < output.length; i++) {
-            // On calcule la moyenne des échantillons
-            double sum = 0;
-            for (int j = 0; j < sampleCount; j++) {
-                if (i - j >= 0) {
-                    sum += fourier[i - j].re();
-                }
-            }
-            output[i] = new Complex(sum / sampleCount, 0);
+    public double[] lpFilter(double[] inputSignal, double sampleFreq, double cutoffFreq) {
+        // Initialize the output array
+        double[] outputSignal = new double[inputSignal.length];
+        // Formula can be found and detailed at https://en.wikipedia.org/wiki/RC_circuit
+        double resistanceCapacitance = 1.0 / (cutoffFreq * 2 * Math.PI);
+        double timeStep = 1.0 / sampleFreq;
+        // Formula can be found and detailed at https://en.wikipedia.org/wiki/Low-pass_filter#Discrete-time_realization
+        double smoothingFactor = 1 - Math.exp(-timeStep / resistanceCapacitance);
+        outputSignal[0] = inputSignal[0];
+        for (int i = 1; i < inputSignal.length; i++) {
+            outputSignal[i] = outputSignal[i - 1] + smoothingFactor * (inputSignal[i] - outputSignal[i - 1]);
         }
-        // On calcule la transformée de Fourier inverse
-        Complex[] inverse = FFT.ifft(output);
-        // On remplit le tableau de sortie
-        for (int i = 0; i < audio.length; i++) {
-            audio[i] = inverse[i].re();
-        }
+        return outputSignal;
     }
 }
