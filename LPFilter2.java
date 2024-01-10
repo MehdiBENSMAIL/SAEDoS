@@ -1,5 +1,3 @@
-import math4.transform;
-
 public class LPFilter2 {
     // Filtre passe-bas basé sur fourier
 
