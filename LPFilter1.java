@@ -1,8 +1,19 @@
+// coding : UTF-8
+// Date : 11/01/2024
+// Auteurs : Jean-Baptiste FROEHLY   - B2
+//           Mehdi         BEN SMAIL - C1
+// Filtre passe-bas de moyenne glissante
+
 public class LPFilter1 {
     public static void main(String[] args) {
 
     }
 
+    /**
+     * Filtre passe-bas de moyenne glissante
+     * @param audio tableau d'entrée (double)
+     * @param n nombre d'échantillons à moyenner (int)
+     */
     public void audioLPFilter(double[] audio, int n) {
         // On crée le tableau de sortie
         double[] output = new double[audio.length];
