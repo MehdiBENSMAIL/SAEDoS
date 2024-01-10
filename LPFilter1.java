@@ -2,7 +2,7 @@
 // Date : 11/01/2024
 // Authors : Jean-Baptiste FROEHLY   - B2
 //           Mehdi         BEN SMAIL - C1
-// Low-pass filter butterworth method
+// Low-pass moving average filter
 
 public class LPFilter1 {
 
@@ -14,32 +14,25 @@ public class LPFilter1 {
      * @return the filtered audio array (double[])
      */
     public double[] lpFilter(double[] inputSignal, double sampleFreq, double cutoffFreq) {
-        int N = inputSignal.length;
-        double[] outputSignal = new double[N];
+        // Initialize the output array
+        double[] outputSignal = new double[inputSignal.length];
 
-        // Calculate filter coefficients
-        int M = 40; // Filter order
-        double[] h = new double[M];
-        double fc = cutoffFreq / sampleFreq;
+        // Calculate the number of samples to consider for the moving average
+        int numSamples = (int) Math.round(sampleFreq / cutoffFreq);
+        numSamples = numSamples % 2 == 0 ? numSamples + 1 : numSamples;
 
-        for (int n = 0; n < M; n++) {
-            if (n == (M - 1) / 2) {
-                h[n] = 2 * Math.PI * fc;
-            } else {
-                h[n] = Math.sin(2 * Math.PI * fc * (n - (M - 1) / 2)) / (Math.PI * (n - (M - 1) / 2));
+        // Apply the moving average filter
+        for (int i = 0; i < inputSignal.length; i++) {
+            // Determine the range
+            int start = Math.max(0, i - numSamples / 2);
+            int end = Math.min(inputSignal.length - 1, i + numSamples / 2);
+
+            // Calculate the average of the selected samples
+            double sum = 0;
+            for (int j = start; j <= end; j++) {
+                sum += inputSignal[j];
             }
-            h[n] *= 0.54 - 0.46 * Math.cos(2 * Math.PI * n / (M - 1)); // Hamming window
-        }
-
-        // Apply the filter
-        for (int i = 0; i < N; i++) {
-            double sum = 0.0;
-            for (int j = 0; j < M; j++) {
-                if (i - j >= 0) {
-                    sum += h[j] * inputSignal[i - j];
-                }
-            }
-            outputSignal[i] = sum;
+            outputSignal[i] = sum / (end - start + 1);
         }
 
         return outputSignal;

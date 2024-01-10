@@ -5,9 +5,13 @@ public class TestLP {
     public static void main(String[] args) {
         LPFilter1 lpFilter1 = new LPFilter1();
         LPFilter2 lpFilter2 = new LPFilter2();
-        double[] signal = generateSignal(100);
-        double[] filteredSignal2 = lpFilter2.lpFilter(signal, 10, 0.5);
-        double[] filteredSignal1 = lpFilter1.lpFilter(signal, 10, 0.5);
+        double[] signal = generateSignal(10);
+        long t1 = System.nanoTime();
+        double[] filteredSignal1 = lpFilter1.lpFilter(signal, 2, 0.75);
+        System.out.println("Temps d'exécution lp 1 (vert)   : " + (System.nanoTime() - t1));
+        long t0 = System.nanoTime();
+        double[] filteredSignal2 = lpFilter2.lpFilter(signal, 2, 0.25);
+        System.out.println("Temps d'exécution lp 2 (orange) : " + (System.nanoTime() - t0));
         displaySig(List.of(signal, filteredSignal1, filteredSignal2), 0, signal.length, "line", "Low-pass filter");
 
     }
@@ -37,6 +41,7 @@ public class TestLP {
 
     /**
      * Display signals in a window
+     * 
      * @param listOfSigs a list of the signals to display
      * @param start      the first sample to display
      * @param stop       the last sample to display

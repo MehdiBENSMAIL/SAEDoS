@@ -2,7 +2,7 @@
 // Date : 11/01/2024
 // Authors : Jean-Baptiste FROEHLY   - B2
 //           Mehdi         BEN SMAIL - C1
-// Low-pass filter exponential moving average
+// Low-pass exponential moving average filter
 
 
 public class LPFilter2 {
