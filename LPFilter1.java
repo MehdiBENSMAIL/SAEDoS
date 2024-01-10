@@ -2,32 +2,54 @@
 // Date : 11/01/2024
 // Authors : Jean-Baptiste FROEHLY   - B2
 //           Mehdi         BEN SMAIL - C1
-// Low-pass filter moving average
+// Low-pass filter butterworth method
 
 public class LPFilter1 {
-    public static void main(String[] args) {
 
+    /**
+     * Apply a low pass filter to the audio array using the butterworth method
+     * @param inputSignal the audio array to be filtered (double[])
+     * @param sampleFreq  the sample frequency of the audio array (double
+     * @param cutoffFreq  the cutoff frequency of the filter (double)
+     * @return the filtered audio array (double[])
+     */
+    public double[] lpFilter(double[] inputSignal, double sampleFreq, double cutoffFreq) {
+        // More info on the butterworth filter : https://en.wikipedia.org/wiki/Butterworth_filter
+        int n = 44; // Order of the Butterworth filter
+        double normCutoffFreq = 2.0 * Math.PI * cutoffFreq / sampleFreq;
+        double[] b = new double[n + 1];
+        double[] a = new double[n + 1];
+        double[] outputSignal = new double[inputSignal.length];
+
+        // Calculate Butterworth filter coefficients
+        for (int k = 0; k <= n; k++) {
+            b[k] = Math.pow(normCutoffFreq, n - k);
+            a[k] = binomialCoeff(n, k);
+        }
+        // Apply the filter
+        for (int i = 0; i < inputSignal.length; i++) {
+            outputSignal[i] = 0.0;
+            for (int j = 0; j <= n; j++) {
+                if (i - j >= 0) {
+                    outputSignal[i] += b[j] * inputSignal[i - j] / a[0];
+                }
+            }
+        }
+        return outputSignal;
     }
 
     /**
-     * Apply a low pass filter to the audio array (moving average)
-     * @param audioInput the input audio array (double[])
-     * @param sampleCount the number of samples to average
+     * Calculate the binomial coefficient
+     * @param n
+     * @param k
+     * @return the binomial coefficient
      */
-    public void audioLPFilter(double[] audioInput, int sampleCount) {
-      // Create the output array
-      double[] output = new double[audioInput.length];
-      // Iterate over the output array
-      for (int i = 0; i < output.length; i++) {
-        // Calculate the average of the samples
-        double sum = 0;
-        for (int j = 0; j < sampleCount; j++) {
-          if (i - j >= 0) {
-            sum += audioInput[i - j];
-          }
+    private double binomialCoeff(int n, int k) {
+        if (k == 0 || k == n) {
+            return 1.0;
+        } else {
+            return binomialCoeff(n - 1, k - 1) + binomialCoeff(n - 1, k);
         }
-        output[i] = sum / sampleCount;
-      }
-      audioInput = output;
     }
+
 }
