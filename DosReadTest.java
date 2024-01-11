@@ -1,6 +1,6 @@
 import java.io.*;
 
-public class DosRead2 {
+public class DosReadTest {
     static final int FP = 1000;
     static final int BAUDS = 100;
     static final int[] START_SEQ = { 1, 0, 1, 0, 1, 0, 1, 0 };

@@ -7,10 +7,10 @@ public class TestLP {
         LPFilter2 lpFilter2 = new LPFilter2();
         double[] signal = generateSignal(100);
         long t1 = System.nanoTime();
-        double[] filteredSignal1 = lpFilter1.lpFilter(signal, 2, 0.75);
+        double[] filteredSignal1 = lpFilter1.lpFilter(signal, 5, 0.75);
         System.out.println("Temps d'exécution lp 1 (vert)   : " + (System.nanoTime() - t1));
         long t0 = System.nanoTime();
-        double[] filteredSignal2 = lpFilter2.lpFilter(signal, 2, 0.25);
+        double[] filteredSignal2 = lpFilter2.lpFilter(signal, 5, 0.75);
         System.out.println("Temps d'exécution lp 2 (orange) : " + (System.nanoTime() - t0));
         displaySig(List.of(signal, filteredSignal1, filteredSignal2), 0, signal.length, "line", "Low-pass filter");
 

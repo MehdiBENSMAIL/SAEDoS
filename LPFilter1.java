@@ -7,7 +7,7 @@
 public class LPFilter1 {
 
     /**
-     * Apply a low pass filter to the audio array using the butterworth method
+     * Apply a low pass filter to the audio array using the moving average method
      * @param inputSignal the audio array to be filtered (double[])
      * @param sampleFreq  the sample frequency of the audio array (double
      * @param cutoffFreq  the cutoff frequency of the filter (double)

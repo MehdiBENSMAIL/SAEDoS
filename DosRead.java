@@ -316,11 +316,10 @@ public class DosRead {
       return;
     }
 
-    // Open the WAV file and read its header
+    // Open the WAV file and read its header!
     DosRead dosRead = new DosRead();
     dosRead.readWavHeader(wavFilePath);
 
-    // Rest of the code...
     // Print the audio data properties
     System.out.println("Fichier audio : " + wavFilePath);
     System.out.println("\tFrequence d'echantillonage : "
