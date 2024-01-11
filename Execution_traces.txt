@@ -1,0 +1,65 @@
+######################################################
+Execution of LPTest.java number 1
+######################################################
+
+>> java LPTest
+
+int[] testValue = { 10, 100, 1000, 10000 };
+int[] sampleFreq = { 10 };
+double[] cutoffFreq = { 0.25 };
+
+Output:
+
+Test value for value :10 Sample frequency: 10 Cutoff frequency: 0.25
+Time for LPFilter1: 30100 nanoseconds
+Time for LPFilter2: 31000 nanoseconds
+--------------------------------------------------
+Test value for value :100 Sample frequency: 10 Cutoff frequency: 0.25
+Time for LPFilter1: 1211500 nanoseconds
+Time for LPFilter2: 17300 nanoseconds
+--------------------------------------------------
+Test value for value :1000 Sample frequency: 10 Cutoff frequency: 0.25
+Time for LPFilter1: 41399300 nanoseconds
+Time for LPFilter2: 96100 nanoseconds
+--------------------------------------------------
+Test value for value :10000 Sample frequency: 10 Cutoff frequency: 0.25
+Time for LPFilter1: 2624728700 nanoseconds
+Time for LPFilter2: 822500 nanoseconds
+--------------------------------------------------
+
+Note:
+
+As expected, the values seem relevant since they correspond to our hypothesis (longer execution time for LPFIlter1 but better quality observed upon being displayed).
+
+######################################################
+Execution of LPTest.java number 2
+######################################################
+
+>> java LPTest
+
+int[] testValue = { 10, 100, 1000, 10000 };
+int[] sampleFreq = { 50 };
+double[] cutoffFreq = { 0.75 };
+
+Output:
+
+Test value for value :10 Sample frequency: 50 Cutoff frequency: 0.75
+Time for LPFilter1: 49600 nanoseconds
+Time for LPFilter2: 32700 nanoseconds
+--------------------------------------------------
+Test value for value :100 Sample frequency: 50 Cutoff frequency: 0.75
+Time for LPFilter1: 1251100 nanoseconds
+Time for LPFilter2: 14200 nanoseconds
+--------------------------------------------------
+Test value for value :1000 Sample frequency: 50 Cutoff frequency: 0.75
+Time for LPFilter1: 45498900 nanoseconds
+Time for LPFilter2: 113100 nanoseconds
+--------------------------------------------------
+Test value for value :10000 Sample frequency: 50 Cutoff frequency: 0.75
+Time for LPFilter1: 2618355500 nanoseconds
+Time for LPFilter2: 774800 nanoseconds
+--------------------------------------------------
+
+Note :
+
+As expected, the values seem relevant since they correspond to our hypothesis (longer execution time for LPFIlter1 but better quality observed upon being displayed).

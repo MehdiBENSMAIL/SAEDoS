@@ -16,7 +16,6 @@ public class DosReadTest {
      * Constructor that opens the FileInputStream
      * and reads sampleRate, bitsPerSample and dataSize
      * from the header of the wav file
-     * 
      * @param path the path of the wav file to read
      */
     public void readWavHeader(String path) {

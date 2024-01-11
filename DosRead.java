@@ -26,7 +26,6 @@ public class DosRead {
    * @param path the path of the wav file to read
    */
   public void readWavHeader(String path) {
-    
     byte[] header = new byte[44]; // The header is 44 bytes long
     try {
       fileInputStream = new FileInputStream(path);

@@ -165,7 +165,6 @@ public class DosSend {
         byte[] bits = new byte[chars.length * 8];
         for (int i = 0; i < chars.length; i++) { // for each char
             for (int j = 0; j < 8; j++) { // 8 bits per char
-                // 7 - j to get the most significant bit first
                 bits[i * 8 + j] = (byte) ((chars[i] >> (7 - j)) & 0x01);
             }
         }

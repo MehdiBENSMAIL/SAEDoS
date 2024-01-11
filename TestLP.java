@@ -5,14 +5,27 @@ public class TestLP {
     public static void main(String[] args) {
         LPFilter1 lpFilter1 = new LPFilter1();
         LPFilter2 lpFilter2 = new LPFilter2();
-        double[] signal = generateSignal(100);
-        long t1 = System.nanoTime();
-        double[] filteredSignal1 = lpFilter1.lpFilter(signal, 5, 0.75);
-        System.out.println("Temps d'exécution lp 1 (vert)   : " + (System.nanoTime() - t1));
-        long t0 = System.nanoTime();
-        double[] filteredSignal2 = lpFilter2.lpFilter(signal, 5, 0.75);
-        System.out.println("Temps d'exécution lp 2 (orange) : " + (System.nanoTime() - t0));
-        displaySig(List.of(signal, filteredSignal1, filteredSignal2), 0, signal.length, "line", "Low-pass filter");
+        int[] testValue = { 10, 100, 1000, 10000 };
+        int[] sampleFreq = { 50 };
+        double[] cutoffFreq = { 0.75 };
+
+        for (int i = 0; i < testValue.length; i++) {
+            double[] signal = generateSignal(testValue[i]);
+            for (int j = 0; j < sampleFreq.length; j++) {
+                for (int k = 0; k < cutoffFreq.length; k++) {
+                    long time1 = System.nanoTime();
+                    double[] output1 = lpFilter1.lpFilter(signal, sampleFreq[j], cutoffFreq[k]);
+                    time1 = System.nanoTime() - time1;
+                    long time2 = System.nanoTime();
+                    double[] output2 = lpFilter2.lpFilter(signal, sampleFreq[j], cutoffFreq[k]);
+                    time2 = System.nanoTime() - time2;
+                    System.out.println("Test value for value :" + testValue[i] + " Sample frequency: " + sampleFreq[j] + " Cutoff frequency: " + cutoffFreq[k]);
+                    System.out.println("Time for LPFilter1: " + time1 + " nanoseconds");
+                    System.out.println("Time for LPFilter2: " + time2 + " nanoseconds");
+                    System.out.println("--------------------------------------------------");
+                }
+            }
+        }
 
     }
 
@@ -25,6 +38,7 @@ public class TestLP {
 
     /**
      * Generate a random signal
+     * 
      * @param length
      * @return the generated signal
      */
