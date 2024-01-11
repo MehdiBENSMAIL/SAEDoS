@@ -24,7 +24,8 @@ public class LPFilter2 {
         outputSignal[0] = inputSignal[0];
         for (int i = 1; i < inputSignal.length; i++) {
             // Smoothe the signal by applying the exponential moving average
-            outputSignal[i] = outputSignal[i - 1] + smoothingFactor * (inputSignal[i] - outputSignal[i - 1]);
+            outputSignal[i] = outputSignal[i - 1] + smoothingFactor *
+            (inputSignal[i] - outputSignal[i - 1]);
         }
         return outputSignal;
     }
